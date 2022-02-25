@@ -8,7 +8,7 @@
 </head>
 <body>
     <?php
-    echo "Hello World by Botti"
+    echo "Hello World by Bottii"
     ?>
 </body>
 </html>
