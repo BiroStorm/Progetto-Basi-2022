@@ -8,7 +8,7 @@
 </head>
 <body>
     <?php
-    echo "Hello World by Bottii"
+    echo "Viva Putin"
     ?>
     <p> Ciao</p>
 </body>
