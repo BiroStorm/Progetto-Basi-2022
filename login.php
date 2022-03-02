@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Progetto di Basi Di Dati 2022</title>
+    <title>Login</title>
 </head>
 <body>
-    <?php
-    echo "Viva Ucraina"
-    ?>
-    <p> Ciao</p>
+    
 </body>
 </html>
