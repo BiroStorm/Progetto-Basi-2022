@@ -1,0 +1,14 @@
+.mainText{
+    font-size: 2em;
+}
+.mainBox{
+border: 2px solid black;
+}
+
+form label{
+    font-size: 1.3em;
+    margin-top: 15px;
+    padding: 1.5em;
+    width:min-content;
+    height:min-content ;
+}
