@@ -57,7 +57,7 @@ if (isset($_POST['username']) && isset($_POST["password"])) {
         echo "Login Fallito!<br>";
     }
     ?>
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
         Username: <input type="text" name="username">
         <br>
         Password: <input type="password" name="password">
