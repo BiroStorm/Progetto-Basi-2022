@@ -1,3 +1,7 @@
 # 24-03-2022
 Modifica file Index.php, aggiunta di Bootstrap + Statistiche del sito
 TODO testare se popolando le tabella, nella Home Page viene generata la tabella del top Utenti.
+
+# 04-04-2022
+include './utilities/databaseSetup.php'; ora fa tutto il lavoro della connessione al db, basta 
+importare questa stringa di codice.

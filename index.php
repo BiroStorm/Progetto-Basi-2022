@@ -17,14 +17,8 @@
 
 <body>
     <?php
-    try {
-        include 'credentials.php';
-        $pdo = new PDO('mysql:host=' . $dbAdress . ';dbname=' . $dbName, $dbUser, $dbPass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        echo ("[ERRORE] Connessione al DB non riuscita. Errore: " . $e->getMessage());
-        exit();
-    }
+    include './utilities/databaseSetup.php';
+    
     $sql = 'SELECT Numero FROM NTotConferenze';
     $res = $pdo->prepare($sql);
     $res->execute();
@@ -41,8 +35,8 @@
     <nav class="nav nav-pills sticky-top navbar-light bg-light">
         <a class="nav-link active" aria-current="page" href="#">Home</a>
         <a class="nav-link" href="/conferenze.php">Conferenze</a>
-        <a class="nav-link" href="#">Pagina 2</a>
-        <a class="nav-link" href="#">Pagina 3</a>
+        <a class="nav-link" href="/logout.php">Logout</a>
+        <a class="nav-link" href="/Login.php">Login</a>
     </nav>
 
     <h1>Progetto di Basi di Dati</h1>
@@ -101,6 +95,8 @@
             </div>
         </div>
     </div>
+
+    
 </body>
 
 </html>
