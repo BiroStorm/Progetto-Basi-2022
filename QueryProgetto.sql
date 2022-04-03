@@ -353,7 +353,7 @@ DELIMITER ;
 ###################################  Viste as "Statistiche"  #####################################
 CREATE VIEW NTotConferenze(Numero) AS (SELECT Count(*) FROM Conferenza);
 CREATE VIEW NConferenzeAttive(Numero) AS (SELECT Count(*) FROM Conferenza WHERE Svolgimento = "Attiva");
-CREATE VIEW NUtenti(Numero) AS (SELECT Count(*) FROM Utenti);
+CREATE VIEW NUtenti(Numero) AS (SELECT Count(*) FROM Utente);
 CREATE VIEW ClassificaPresentazioni(t) AS (
 	SELECT U.Username as "Username" , AVG(Voto) as "Media", U.Nome as "Nome", U.Cognome as "Cognome"
     FROM (SELECT Codice, Voto, Presentatore as "Username"
