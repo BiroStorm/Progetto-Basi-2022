@@ -24,13 +24,14 @@ try {
         $sql = "CALL VisualizzaConferenze(1)";
         $st = $pdo->query($sql);
 
+
         echo "<select>";
         if($st->rowCount() == 0) {
             echo "Nessuna conferenza disponibile";
         } else {
             $conferenze = $st->fetchAll(PDO::FETCH_OBJ);
             
-            echo "<option> -- Conferenze -- </option>";
+
             foreach($conferenze as $record) {
                 //echo "Nome: " .$record->Nome. " - Acronimo: " .$record->Acronimo. " - Anno: " .$record->AnnoEdizione. "<br>";
                 echo "<option value='$record->Nome'>$record->Nome</option>";
@@ -42,7 +43,7 @@ try {
         
 
 
-        
+     
 
 ?>
 
