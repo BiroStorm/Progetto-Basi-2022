@@ -3,14 +3,7 @@ $q = $_REQUEST["q"];
 
 $hint = "";
 if ($q !== "") {
-    try {
-        include 'credentials.php';
-        $pdo = new PDO('mysql:host=' . $dbAdress . ';dbname=' . $dbName, $dbUser, $dbPass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        echo ("[ERRORE] Connessione al DB non riuscita. Errore: " . $e->getMessage());
-        exit();
-    }
+    include './utilities/databaseSetup.php';
     try {
         $sql = 'SELECT 1 FROM Utente WHERE Username=:lab1';
         $res = $pdo->prepare($sql);

@@ -7,14 +7,7 @@ if (isset($_SESSION['authorized'])) {
 
 if (isset($_POST['username']) && isset($_POST["password"]) && isset($_POST["nome"]) 
     && isset($_POST["cognome"]) && isset($_POST["luogo"]) && isset($_POST["data"])) {
-    try {
-        include 'credentials.php';
-        $pdo = new PDO('mysql:host='.$dbAdress.';dbname='.$dbName, $dbUser, $dbPass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        echo ("[ERRORE] Connessione al DB non riuscita. Errore: " . $e->getMessage());
-        exit();
-    }
+    include './utilities/databaseSetup.php';
     try {
         // Controlliamo che l'Username scelto sia Univoco:
         $sql = 'SELECT 1 FROM Utente WHERE Username=:x';
