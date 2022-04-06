@@ -3,7 +3,7 @@ $q = $_REQUEST["q"];
 
 $hint = "";
 if ($q !== "") {
-    include './utilities/databaseSetup.php';
+    include '../utilities/databaseSetup.php';
     try {
         $sql = 'SELECT 1 FROM Utente WHERE Username=:lab1';
         $res = $pdo->prepare($sql);

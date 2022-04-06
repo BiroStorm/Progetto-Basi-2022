@@ -1,7 +1,7 @@
 <?php
 
 try {
-    include './utilities/credentials.php';
+    include __DIR__ .'./credentials.php';
     $pdo = new PDO('mysql:host=' . $dbAdress . ';dbname=' . $dbName, $dbUser, $dbPass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
