@@ -7,18 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Progetto di Basi Di Dati 2022</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <style>
-        h1 {
-            text-align: center;
-        }
-    </style>
+
+    <link rel="stylesheet" href="css/index.css">
 
 </head>
 
 <body>
     <?php
     include './utilities/databaseSetup.php';
-    
+
+    session_start();
     $sql = 'SELECT Numero FROM NTotConferenze';
     $res = $pdo->prepare($sql);
     $res->execute();
@@ -32,12 +30,15 @@
     $res->execute();
     $NUtenti = ($res->fetch())["Numero"];
     ?>
-    <nav class="nav nav-pills sticky-top navbar-light bg-light">
-        <a class="nav-link active" aria-current="page" href="#">Home</a>
-        <a class="nav-link" href="/conferenze.php">Conferenze</a>
-        <a class="nav-link" href="/logout.php">Logout</a>
-        <a class="nav-link" href="/Login.php">Login</a>
-    </nav>
+
+    <!-- START Navigation Bar -->
+    <?php
+    $currentPage = __FILE__;
+    include "./utilities/navigationBar.php";
+    ?>
+    <!-- END Navigation Bar -->
+
+    <!-- START MAIN BOX -->
 
     <h1>Progetto di Basi di Dati</h1>
     <div class="container">
@@ -77,18 +78,18 @@
                     </thead>
                     <tbody>
                         <?php
-                            $sql = 'SELECT * FROM ClassificaPresentazioni LIMIT 10';
-                            $res = $pdo->prepare($sql);
-                            $res->execute();
-                            $counter = 1;
-                            // TODO: Testare se funziona quando le tabelle vengono popolate.
-                            while($row = $res->fetch()){
-                                $str = "<tr><th scope='row'>".$counter."</th>";
-                                $str += "<td>".$row["Voto"]."</td>";
-                                $str += "<td>".$row["Nome"]."</td>";
-                                $str += "<td>".$row["Cognome"]."</td>";
-                                $str += "<td>".$row["Username"]."</td></tr>";
-                            }
+                        $sql = 'SELECT * FROM ClassificaPresentazioni LIMIT 10';
+                        $res = $pdo->prepare($sql);
+                        $res->execute();
+                        $counter = 1;
+                        // TODO: Testare se funziona quando le tabelle vengono popolate.
+                        while ($row = $res->fetch()) {
+                            $str = "<tr><th scope='row'>" . $counter . "</th>";
+                            $str += "<td>" . $row["Voto"] . "</td>";
+                            $str += "<td>" . $row["Nome"] . "</td>";
+                            $str += "<td>" . $row["Cognome"] . "</td>";
+                            $str += "<td>" . $row["Username"] . "</td></tr>";
+                        }
                         ?>
                     </tbody>
                 </table>
@@ -96,7 +97,6 @@
         </div>
     </div>
 
-    
 </body>
 
 </html>

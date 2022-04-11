@@ -17,7 +17,7 @@ $username = $_SESSION['username'];
     <title>Modifica Account</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <style>
-        h1,
+        h2,
         h4 {
             text-align: center;
         }
@@ -26,10 +26,16 @@ $username = $_SESSION['username'];
 </head>
 
 <body>
+    <!-- START Navigation Bar -->
+    <?php
+    $currentPage = __FILE__;
+    include "../utilities/navigationBar.php";
+    ?>
+    <!-- END Navigation Bar -->
     <h2>Benvenuto <?php echo $username ?></h2>
     <h4>Modifica il tuo Account</h4>
     <?php
-    
+
     include '../utilities/databaseSetup.php';
 
     $sql = 'SELECT * FROM Utente WHERE Username = :usr1';
@@ -73,7 +79,7 @@ $username = $_SESSION['username'];
             </form>
         </div>
     </div>
-        
+
     <div class="card">
         <div class="card-header">
             Dati Presenter e Speaker

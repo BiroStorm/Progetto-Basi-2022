@@ -27,10 +27,10 @@ if (isset($_POST['username']) && isset($_POST["password"])) {
             //Login Avvenuto con successo!
             $_SESSION['authorized'] = true;
             $_SESSION['username'] = $username;
-            echo ("<b> Benvenuto nel sistema, " . $username ."</b><br>Redirect in corso...");
-                                            // anti xss--> quindi lo porta solo su link del sito.
+            echo ("<b> Benvenuto nel sistema, " . $username . "</b><br>Redirect in corso...");
+            // anti xss--> quindi lo porta solo su link del sito.
             if (isset($_POST["redirect"]) && str_starts_with($_POST["redirect"], "/")) {
-                header("Refresh: 1; URL=".$_POST["redirect"]);
+                header("Refresh: 1; URL=" . $_POST["redirect"]);
             } else {
                 header("Refresh: 1; URL=index.php");
             }
@@ -51,11 +51,18 @@ if (isset($_POST['username']) && isset($_POST["password"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 </head>
 
 <body>
+    <!-- START Navigation Bar -->
+    <?php
+    $currentPage = __FILE__;
+    include "./utilities/navigationBar.php";
+    ?>
+    <!-- END Navigation Bar -->
+
     <div>
         <div class="card text-center mx-auto mt-4" style="max-width: 18rem;">
             <div class="card-header">
