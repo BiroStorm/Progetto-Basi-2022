@@ -5,3 +5,8 @@ TODO testare se popolando le tabella, nella Home Page viene generata la tabella 
 # 04-04-2022
 include './utilities/databaseSetup.php'; ora fa tutto il lavoro della connessione al db, basta 
 importare questa stringa di codice.
+
+# 10-40-2022
+Aggiornare alla versione di PHP 8! Alcuni metodi hanno cambiato nome dalla v7 --> v8
+Aggiunto sistema di redirect dopo il login, alla pagina "chiamante" tramite metodo GET["redirect"]
+Guardare esempio in /user/ModificaProfilo.php

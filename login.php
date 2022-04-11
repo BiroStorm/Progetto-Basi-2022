@@ -27,8 +27,13 @@ if (isset($_POST['username']) && isset($_POST["password"])) {
             //Login Avvenuto con successo!
             $_SESSION['authorized'] = true;
             $_SESSION['username'] = $username;
-            echo ("<b> Benvenuto nel sistema, " . $username . "</b><br>Redirect in corso...");
-            header("Refresh: 1.5; URL=index.php");
+            echo ("<b> Benvenuto nel sistema, " . $username ."</b><br>Redirect in corso...");
+                                            // anti xss--> quindi lo porta solo su link del sito.
+            if (isset($_POST["redirect"]) && str_starts_with($_POST["redirect"], "/")) {
+                header("Refresh: 1; URL=".$_POST["redirect"]);
+            } else {
+                header("Refresh: 1; URL=index.php");
+            }
             exit();
         }
     }
@@ -71,6 +76,12 @@ if (isset($_POST['username']) && isset($_POST["password"])) {
                 <div class="card-footer text-muted">
                     <input type="submit" value="Login" class="btn-primary">
                 </div>
+                <?php
+                // se il login page è stato richiamato da un'altra pagina...
+                if (isset($_GET["redirect"])) {
+                    echo '<input type="hidden" name="redirect" value="' . htmlspecialchars($_GET["redirect"]) . '"/>';
+                }
+                ?>
             </form>
         </div>
     </div>

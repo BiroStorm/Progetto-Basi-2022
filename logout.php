@@ -2,5 +2,5 @@
    session_start();
    session_destroy();
    echo "Logout completato! Redirect in corso...";
-   header("Refresh: 2; URL=index.php");
+   header("Refresh: 1; URL=index.php");
 ?>

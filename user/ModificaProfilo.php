@@ -2,7 +2,7 @@
 session_start();
 // IF THE USER IS NOT LOGIN
 if (!isset($_SESSION['authorized'])) {
-    header('Location: /login.php');
+    header("Location: /login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
     exit();
 };
 $username = $_SESSION['username'];
@@ -30,7 +30,7 @@ $username = $_SESSION['username'];
     <h4>Modifica il tuo Account</h4>
     <?php
     
-    include './utilities/databaseSetup.php';
+    include '../utilities/databaseSetup.php';
 
     $sql = 'SELECT * FROM Utente WHERE Username = :usr1';
     $res = $pdo->prepare($sql);
