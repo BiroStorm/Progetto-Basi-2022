@@ -42,6 +42,7 @@ if (isset($_SESSION["username"])) {
                         <button class="card-link" onclick="iscriviUtente(<?php echo $record->AnnoEdizione . ',' . $record->Acronimo . ',' . $username ?>)">Card link</button>
                     <?php } ?>
                     <a href='<?php echo "/utilities/iscrizioneConferenza.php?Anno=$record->AnnoEdizione&Acronimo=$record->Acronimo" ?>' class="card-link">Iscriviti</a>
+                    <a href='<?php echo "/utilities/dettagliConferenze.php?Anno=$record->AnnoEdizione&Acronimo=$record->Acronimo" ?>' class="card-link">Dettagli</a>
                 </div>
             </div>
     <?php
