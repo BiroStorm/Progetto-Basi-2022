@@ -13,4 +13,10 @@ Guardare esempio in /user/ModificaProfilo.php
 
 # 11-04-2022
 Creato il Navbar generale, da importare per ogni pagina del sito (Attenzione: Bisogna attivare la session!).
-TODO: Modificare il file Conferenze.php rendendo la "C" minuscola!
+TODO: Modificare il file Conferenze.php rendendo la "C" minuscola! [DONE]
+
+# 14-04-2022
+Aggiornato la pagina dei dettagli di una Conferenza, aggiunto pagina per la creazione dei una conferenza
+accessibile solo agli amministratori.
+TODO: FARE la pagina della creazione di una conferenza.
+TODO: Gestire il caso in cui un utente accede a "dettagli.php" senza parametri o con parametri errati.
