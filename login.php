@@ -12,7 +12,7 @@ if (isset($_POST['username']) && isset($_POST["password"])) {
         $password = $_POST["password"];
         $sql = 'SELECT Password FROM Utente WHERE Username=:lab1';
         $res = $pdo->prepare($sql);
-        $res->bindValue(":lab1", $username);
+        $res->bindValue(":lab1", $username, PDO::PARAM_STR);
 
         $res->execute();
     } catch (PDOException $e) {
@@ -24,10 +24,24 @@ if (isset($_POST['username']) && isset($_POST["password"])) {
         $row = $res->fetch();
         // controlliamo se le password coincidono:
         if (password_verify($password, $row["Password"])) {
-            //Login Avvenuto con successo!
+            // Login Avvenuto con successo!
+            
             $_SESSION['authorized'] = true;
             $_SESSION['username'] = $username;
-            echo ("<b> Benvenuto nel sistema, " . $username . "</b><br>Redirect in corso...");
+
+            // Controlliamo il Ruolo dell'Utente
+            $sql2 = "CALL CheckRuolo(?);";
+            $stmt = $pdo->prepare($sql2);
+            $role = null;
+            $stmt->bindValue(1, $username, PDO::PARAM_STR);
+            
+            $stmt->execute();
+            $role = $stmt->fetch(PDO::FETCH_ASSOC)["Ruolo"];
+            
+            $_SESSION['role'] = $role;
+
+            
+            echo ("<b> Benvenuto nel sistema $username [$role]</b><br>Redirect in corso...");
             // anti xss--> quindi lo porta solo su link del sito.
             if (isset($_POST["redirect"]) && str_starts_with($_POST["redirect"], "/")) {
                 header("Refresh: 1; URL=" . $_POST["redirect"]);

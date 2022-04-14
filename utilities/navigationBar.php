@@ -33,6 +33,14 @@ if (isset($_SESSION['authorized'])) {
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?php echo $username; ?></a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" id="modificaProfilo" href="/user/modificaProfilo.php">Modifica Profilo</a></li>
+                            <?php
+                                // Sezione Admin
+                                if (strcmp($_SESSION["role"], "Admin") == 0){
+                            ?>
+                            <li><a class="dropdown-item" id="" href="/user/creaConferenza.php">Crea Conferenza</a></li>
+                            <?php 
+                                }
+                            ?>
                             <li><a class="dropdown-item" id="" href="#">Da aggiungere</a></li>
                             <li><a class="dropdown-item" href="/logout.php">Logout</a></li>
                         </ul>
