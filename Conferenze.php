@@ -39,13 +39,7 @@ if (isset($_SESSION["username"])) {
                 <div class="card-body">
                     <h5 class="card-title"><?php echo $record->Nome ?></h5>
                     <h6 class="card-subtitle mb-2 text-muted"><?php echo $record->Acronimo ?>-<?php echo $record->AnnoEdizione ?></h6>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
 
-                    <?php
-                    if (isset($_SESSION["username"])) {
-                    ?>
-                        <button class="card-link" onclick="iscriviUtente(<?php echo $record->AnnoEdizione . ',' . $record->Acronimo . ',' . $username ?>)">Card link</button>
-                    <?php } ?>
                     <a href='<?php echo "/utilities/iscrizioneConferenza.php?Anno=$record->AnnoEdizione&Acronimo=$record->Acronimo" ?>' class="card-link">Iscriviti</a>
                     <a href='<?php echo "/conferenze/dettagli.php?Anno=$record->AnnoEdizione&Acronimo=$record->Acronimo" ?>' class="card-link">Dettagli</a>
                 </div>
