@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Iscrizione alla conferenza</title>
 </head>
 
 <body>
@@ -25,7 +25,16 @@
     include '../utilities/databaseSetup.php';
     //...
 
-    echo "test";
+    echo "Registrato correttamente alla conferenza";
+    $sql = 'INSERT INTO Registrazione VALUES (:an, :ac, :us)';
+        $res = $pdo->prepare($sql);
+        $res->bindValue(":an", $anno);
+        $res->bindValue(":ac", $acronimo);
+        $res->bindValue(":us", $username);
+
+        $res->execute();
+
+        echo "<script>window.close();</script>";
     ?>
 </body>
 
