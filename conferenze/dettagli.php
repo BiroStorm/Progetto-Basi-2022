@@ -54,7 +54,7 @@ if (isset($_SESSION["username"])) {
     <h2 class="text-center mt-4"><?php echo $row["Nome"] ?></h2>
     <h5 class="text-center text-secondary"><?php echo ($anno."-".$acronimo) ?></h5>
     <h6 class="text-center text-secondary"><?php echo ("Dal ".$row["DataInizio"]." al ".$row["DataFine"]) ?></h6>
-    
+    <h6 class="text-center text-secondary"><?php echo ("Le sponsorizzazioni per questa conferenza sono: ".$row["Totale_Sponsorizzazioni"]) ?></h6>
     <img class="confLogo rounded mx-auto d-block" src="<?php echo $row["Logo"];?>"/>
     
     <h5 class="text-center">Status: <?php if (strcmp("Attiva", $row["Svolgimento"])){
