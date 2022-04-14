@@ -40,7 +40,7 @@ if (isset($_SESSION["username"])) {
         // controllo eccezioni dato dal DB
         try {
             $st = $pdo->prepare($sql); //Preparazione SQL 
-            $st->bindParam(":x1", $acronimo, PDO::PARAM_STR); //Inserire i valori relai nell'SQL
+            $st->bindParam(":x1", $acronimo, PDO::PARAM_STR); //Inserire i valori reali nell'SQL
             $st->bindValue(":x2", $anno, PDO::PARAM_INT);
             $st->execute(); //Eseguire SQL
         } catch (PDOException $e) {
