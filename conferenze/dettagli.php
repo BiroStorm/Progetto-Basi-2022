@@ -51,25 +51,47 @@ if (isset($_SESSION["username"])) {
         if ($st->rowCount() == 1) { //Controllo del numero di righe ritornate
             $row = $st->fetch(); //Ricava la prima riga del risultato e poi la salva nella variabile $row
     ?>
-    <h2 class="text-center mt-4"><?php echo $row["Nome"] ?></h2>
-    <h5 class="text-center text-secondary"><?php echo ($anno."-".$acronimo) ?></h5>
-    <h6 class="text-center text-secondary"><?php echo ("Dal ".$row["DataInizio"]." al ".$row["DataFine"]) ?></h6>
-    <h6 class="text-center text-secondary"><?php echo ("Le sponsorizzazioni per questa conferenza sono: ".$row["Totale_Sponsorizzazioni"]) ?></h6>
-    <img class="confLogo rounded mx-auto d-block" src="<?php echo $row["Logo"];?>"/>
-    
-    <h5 class="text-center">Status: <?php if (strcmp("Attiva", $row["Svolgimento"])){
-            echo "<p class='text-success text-center'>Attiva</p>";
-        }else{
-            echo "<p class='text-danger text-center'>Completata</p>";
+    <div class="position-relative">
+        <!-- Tasto Iscriviti/ testo "Sei già iscritto" -->
+        <div class="position-absolute top-0 end-0 mt-4 translate-middle">
+            <?php
+                // se è loggato e lo svolgimento è attivo, mostrare pulsante o scritta d'iscrizione.
+                if(isset($_SESSION["authorized"]) && strcmp("Attiva", $row["Svolgimento"])){
+                    //controlla se è già iscritto
+                    $sql = "SELECT 1 FROM Registrazione WHERE UsernameUtente = ? AND AcronimoConf = ? AND AnnoEdizione = ?";
+                    $res = $pdo->prepare($sql);
+                    $res->bindValue(1, $_SESSION["username"]);
+                    $res->bindValue(2, $acronimo);
+                    $res->bindValue(3, $anno);
+                    $res->execute();
+                    if ($res->rowCount() > 0){
+                        //utente già registrato
+                        echo '<h5 class="text-center text-success">Registrato</h5>';
+                    }else{
+                        //utente NON registrato alla conferenzza
+                        echo '<a href="#TODO">Iscriviti</a>';
+                    }
+                }
+            ?>
+        </div>
+        <h2 class="text-center mt-4"><?php echo $row["Nome"] ?></h2>
+        <h5 class="text-center text-secondary"><?php echo ($anno."-".$acronimo) ?></h5>
+        <h6 class="text-center text-secondary"><?php echo ("Dal ".$row["DataInizio"]." al ".$row["DataFine"]) ?></h6>
+        <h6 class="text-center text-secondary"><?php echo ("Le sponsorizzazioni per questa conferenza sono: ".$row["Totale_Sponsorizzazioni"]) ?></h6>
+        <img class="confLogo rounded mx-auto d-block" src="<?php echo $row["Logo"];?>"/>
+        
+        <h5 class="text-center">Status: <?php if (strcmp("Attiva", $row["Svolgimento"])){
+                echo "<p class='text-success text-center'>Attiva</p>";
+            }else{
+                echo "<p class='text-danger text-center'>Completata</p>";
+            }
+        ?>
+        </h5>
+        <?php
+            }
         }
-    ?>
-    </h5>
-
-
-    <?php
-        }
-    }
-    ?>
+        ?>
+    </div>
 </body>
 
 </html>
