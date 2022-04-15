@@ -20,3 +20,7 @@ Aggiornato la pagina dei dettagli di una Conferenza, aggiunto pagina per la crea
 accessibile solo agli amministratori.
 TODO: FARE la pagina della creazione di una conferenza.
 TODO: Gestire il caso in cui un utente accede a "dettagli.php" senza parametri o con parametri errati.
+
+# 15-04-2022
+Creato pagine 404 e 403, sistemato il sistema di redirect in caso di pagine riservate.
+Creato cartella admin/ dove conterranno tutte le pagine riservate agli admin --> Spostato quindi il file creaConferenza.php

@@ -15,7 +15,7 @@ if (isset($_SESSION['authorized'])) {
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse " id="navbarNavDropdown">
+        <div class="collapse navbar-collapse " id="navbarNavDarkDropdown">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" id="index" href="/index.php">Home</a>
@@ -30,17 +30,19 @@ if (isset($_SESSION['authorized'])) {
                     <?php
                     if (isset($_SESSION['authorized'])) { ?>
                         <!-- Utente Loggato -->
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?php echo $username; ?></a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="nav-link dropdown-toggle" id="navbarDarkDropdownMenuLink" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?php echo $username; ?></a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
                             <li><a class="dropdown-item" id="modificaProfilo" href="/user/modificaProfilo.php">Modifica Profilo</a></li>
                             <?php
                                 // Sezione Admin
                                 if (strcmp($_SESSION["role"], "Admin") == 0){
                             ?>
-                            <li><a class="dropdown-item" id="" href="/user/creaConferenza.php">Crea Conferenza</a></li>
+                            <li><a class="dropdown-item" id="creaConferenza" href="/admin/creaConferenza.php">Crea Conferenza</a></li>
                             <?php 
                                 }
                             ?>
+                            <!-- tutti gli utenti -->
+                            <li><a class="dropdown-item" id="" href="#">Visualizza Preferiti</a></li>
                             <li><a class="dropdown-item" id="" href="#">Da aggiungere</a></li>
                             <li><a class="dropdown-item" href="/logout.php">Logout</a></li>
                         </ul>

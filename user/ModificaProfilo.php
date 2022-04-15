@@ -16,12 +16,6 @@ $username = $_SESSION['username'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifica Account</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <style>
-        h2,
-        h4 {
-            text-align: center;
-        }
-    </style>
 
 </head>
 
@@ -32,8 +26,8 @@ $username = $_SESSION['username'];
     include "../utilities/navigationBar.php";
     ?>
     <!-- END Navigation Bar -->
-    <h2>Benvenuto <?php echo $username ?></h2>
-    <h4>Modifica il tuo Account</h4>
+    <h2 class="text-center">Benvenuto <?php echo $username ?></h2>
+    <h4 class="text-center">Modifica il tuo Account</h4>
     <?php
 
     include '../utilities/databaseSetup.php';
