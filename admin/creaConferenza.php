@@ -13,34 +13,78 @@ if (isset($_SESSION['authorized'])) {
     header("Location: /login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
     exit();
 }
+$uploadOk = 1;
 if (
     isset($_POST['acronimo']) && isset($_POST["annoEdizione"]) && isset($_POST["nome"])
-    && isset($_POST["logo"]) && isset($_POST["svolgimento"]) && isset($_POST["totale_Sponsorizzazioni"])
+    && isset($_POST["inizio"]) && isset($_POST["fine"]) && isset($_FILES["logo"])
 ) {
-    include './utilities/databaseSetup.php';
+    // controllo date inizio < fine:
+    if ($_POST["inizio"] > $_POST["fine"]) {
+        // errore
+        // TODO:
+        $uploadOk = 0;
+    }
+
+
+    include '../utilities/databaseSetup.php';
     try {
         // Controlliamo che l'Acronimo scelto sia Univoco:
-        $sql = 'SELECT 1 FROM Conferenza WHERE Acronimo=:x';
+        $sql = 'SELECT 1 FROM Conferenza WHERE Acronimo=? AND AnnoEdizione = ?';
         $res = $pdo->prepare($sql);
-        $res->bindValue(":x", $_POST["acronimo"]);
+        $res->bindValue(1, $_POST["acronimo"]);
+        $res->bindValue(2, $_POST["annoEdizione"]);
         $res->execute();
         if ($res->rowCount() == 1) {
             // Acronimo Già Presente!
             // TODO 
+            $uploadOk = 0;
         } else {
 
-            $sql = 'INSERT INTO Conferenza(Acronimo, AnnoEdizione, Nome, Logo, Svolgimento, Totale_Sponsorizzazioni) VALUES(:x1, :x2, :x3, :x4, :x5, :x6)';
+            $sql = 'CALL NuovaConferenza(?, ?, ?, ?, ?, ?, ?)';
             $res = $pdo->prepare($sql);
-            $res->bindValue(":x1", $_POST["acronimo"]);
-            $res->bindValue(":x2", $_POST["annoEdizione"]);
-            $res->bindValue(":x3", $_POST["nome"]);
-            $res->bindValue(":x4", $_POST["logo"]);
-            $res->bindValue(":x5", $_POST["svolgimento"]);
-            $res->bindValue(":x6", $_POST["totale_Sponsorizzazioni"]);
-            $res->execute();
 
-            echo "Creazione conferenza Completata! <br> Redirect in corso...";
-            header("Refresh: 1; URL=Conferenze.php");
+            $logopath = __DIR__ . "/../assets/imgs/conferenza/default.png";
+            $res->bindValue(1, $_SESSION["username"]);
+            $res->bindValue(2, $_POST["acronimo"]);
+            $res->bindValue(3, $_POST["annoEdizione"]);
+            $res->bindParam(4, $logopath);
+            $res->bindValue(5, $_POST["nome"]);
+            $res->bindValue(6, $_POST["inizio"]);
+            $res->bindValue(7, $_POST["fine"]);
+
+            // SETUP LOADING LOGO
+            $target_dir = __DIR__ . "/../assets/imgs/conferenza/";
+            $targetfinale = $target_dir . basename($_FILES["logo"]["name"]);
+            
+            $imageFileType = strtolower(pathinfo($targetfinale, PATHINFO_EXTENSION));
+
+            if (UPLOAD_ERR_OK !== $_FILES["logo"]['error']) {
+                //errore nell'upload
+            } else {
+                $check = getimagesize($_FILES["logo"]["tmp_name"]);
+                if ($check == false || ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg")) {
+                    // non è un img
+                } else {
+                    if ($_FILES["logo"]["size"] > 400000) {
+                        // file troppo grande!
+                        
+                    } else {
+                        if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_dir . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType)) {
+                            $logopath = $target_dir . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType;
+                        } else {
+                            //errore con l'uploading del file
+                            echo "error";
+                        }
+                    }
+                }
+            }
+
+            if ($res->execute()) {
+                echo "Creazione conferenza Completata! <br> Redirect in corso...";
+                header("Refresh: 1; URL=/conferenze.php");
+            } else {
+                // esecuzione fallita...
+            }
         }
     } catch (PDOException $e) {
         echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
@@ -66,19 +110,24 @@ if (
     $currentPage = __FILE__;
     include "../utilities/navigationBar.php";
     ?>
-    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-        Acronimo: <input type="text" name="acronimo" autocomplete="off" onkeyup="checkUsername(this.value)">
+    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+        Acronimo: <input type="text" name="acronimo" autocomplete="off">
         <span id="result"></span>
         <br>
         Anno Edizione: <input type="text" name="annoEdizione" id="" autocomplete="off" required>
         <br>
         Nome conferenza: <input type="text" name="nome" autocomplete="off" equired>
         <br>
-       <!-- Data di Nascita: <input type="date" name="data" id="" min="1920-01-01" max="2022-12-31" required> !-->
-        <br>
-       Svolgimento: <input type="text" name="svolgimento" required>
-        <br>
-        Totale sponsorizzazioni: <input type="text" name="totale_Sponsorizzazioni" required>
+        <!-- Data di Nascita: <input type="date" name="data" id="" min="1920-01-01" max="2022-12-31" required> !-->
+        <input type="date" name="inizio" id="" min="1920-01-01" max="2022-12-31" required>
+        <input type="date" name="fine" id="" min="1920-01-01" max="2022-12-31" required>
+        <input type="file" name="logo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" required>
+        <input type="submit" value="invia">
+        <?php 
+        if ($uploadOk == 0){
+            //stampa qualcosa//
+        }
+        ?>
         <br>
 </body>
 

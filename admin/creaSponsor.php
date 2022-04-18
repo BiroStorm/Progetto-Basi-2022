@@ -13,6 +13,38 @@ if (isset($_SESSION['authorized'])) {
     exit();
 }
 
+// if $_POST is set:
+if (isset($_POST["nome"])) {
+    
+    $target_dir = __DIR__."/../assets/imgs/sponsor/";
+    $targetfinale = $target_dir . basename($_FILES["logo"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($targetfinale, PATHINFO_EXTENSION));
+
+    if (UPLOAD_ERR_OK !== $_FILES["logo"]['error']) {
+        //errore nell'upload
+    } else {
+        $check = getimagesize($_FILES["logo"]["tmp_name"]);
+        if ($check == false || ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg")) {
+            // non è un img
+            $uploadOk = 0;
+        } else {
+            if ($_FILES["logo"]["size"] > 400000) {
+                // file troppo grande!
+            } else {
+                if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_dir . $_POST["nome"] .".". $imageFileType)) {
+                    echo "uploaded";
+                } else {
+                    //errore con l'uploading del file
+                    echo "error";
+                }
+            }
+        }
+    }
+    exit();
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -32,12 +64,24 @@ if (isset($_SESSION['authorized'])) {
     $currentPage = __FILE__;
     include "../utilities/navigationBar.php";
     ?>
-    <form action="" method="post">
-        Nome Sponsor: <input type="text" name="nome" id="">
-        Logo Sponsor: <input type="file" name="logo" id="">
-        <input type="reset" value="Cancella">
-        <input type="submit" value="Conferma">
-    </form>
+    <div class="card text-center mx-auto mt-4" style="max-width: 18rem;">
+        <div class="card-header">
+            Crea uno Sponsor
+        </div>
+        <div class="card-body">
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Nome Sponsor</label>
+                    <input type="text" name="nome" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Logo Sponsor</label>
+                    <input type="file" name="logo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Crea</button>
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>
