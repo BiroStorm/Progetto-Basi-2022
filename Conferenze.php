@@ -35,6 +35,7 @@ if (isset($_SESSION["username"])) {
 
         foreach ($conferenze as $record) {
     ?>      
+
             <div class="row no-gutters bg-light position-relative">
                 <div class="col-md-6 mb-md-0 p-md-4">
                     <img src="<?php echo $record->Logo ?>" class="img-thumbnail" alt="..." style="width:800px; height: 200px;">
