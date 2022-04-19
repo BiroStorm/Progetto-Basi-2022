@@ -25,7 +25,18 @@
     include '../utilities/databaseSetup.php';
     //...
 
-    echo "Registrato correttamente alla conferenza";
+    $sql = "SELECT 1 From Registrazione WHERE AnnoEdizione = :an AND AcronimoConf = :ac AND UsernameUtente = :us";
+    
+    $res = $pdo->prepare($sql);
+    $res->bindValue(":an", $anno);
+    $res->bindValue(":ac", $acronimo);
+    $res->bindValue(":us", $username);
+    $res->execute();
+
+    if ($res->rowCount() > 0) {
+        echo "Sei già registrato a questa conferenza.";
+    } else {
+
     $sql = 'INSERT INTO Registrazione VALUES (:an, :ac, :us)';
         $res = $pdo->prepare($sql);
         $res->bindValue(":an", $anno);
@@ -33,8 +44,12 @@
         $res->bindValue(":us", $username);
 
         $res->execute();
+        echo "Registrato correttamente!";
 
-        echo "<script>window.close();</script>";
+    }
+    
+    echo " Sarai rendeirizzato automaticamente alla pagina delle conferenze...";
+    header("Refresh: 2; URL=http://localhost/conferenze.php");
     ?>
 </body>
 

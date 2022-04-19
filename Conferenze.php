@@ -36,12 +36,13 @@ if (isset($_SESSION["username"])) {
         foreach ($conferenze as $record) {
     ?>
             <div class="card mt-2" style="width: 18rem; ">
+            <img class="card-img-top" src="<?php echo $record->Logo ?>" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title"><?php echo $record->Nome ?></h5>
                     <h6 class="card-subtitle mb-2 text-muted"><?php echo $record->Acronimo ?>-<?php echo $record->AnnoEdizione ?></h6>
 
-                    <a href='<?php echo "/utilities/iscrizioneConferenza.php?Anno=$record->AnnoEdizione&Acronimo=$record->Acronimo" ?>' class="card-link">Iscriviti</a>
-                    <a href='<?php echo "/conferenze/dettagli.php?Anno=$record->AnnoEdizione&Acronimo=$record->Acronimo" ?>' class="card-link">Dettagli</a>
+                    <a href='<?php echo "/utilities/iscrizioneConferenza.php?Anno=$record->AnnoEdizione&Acronimo=$record->Acronimo" ?>' class="btn btn-light btn-sm">Iscriviti</a>
+                    <a href='<?php echo "/conferenze/dettagli.php?Anno=$record->AnnoEdizione&Acronimo=$record->Acronimo" ?>' class="btn btn-light btn-sm">Dettagli</a>
                 </div>
             </div>
     <?php
