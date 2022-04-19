@@ -37,6 +37,7 @@
         echo "Sei già registrato a questa conferenza.";
     } else {
 
+    //metti la stored
     $sql = 'INSERT INTO Registrazione VALUES (:an, :ac, :us)';
         $res = $pdo->prepare($sql);
         $res->bindValue(":an", $anno);
