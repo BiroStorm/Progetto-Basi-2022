@@ -69,7 +69,7 @@ if (isset($_SESSION["username"])) {
                         echo '<h5 class="text-center text-success">Registrato</h5>';
                     }else{
                         //utente NON registrato alla conferenzza
-                        echo "<a href='/utilities/iscrizioneConferenza.php?Anno=$anno&Acronimo=$acronimo'>Iscriviti</a>";
+                        echo "<a href='/utilities/iscrizioneConferenza.php?Anno=$anno&Acronimo=$acronimo' class='btn btn-primary'>Iscriviti</a>";
                         
                     }
                 }
