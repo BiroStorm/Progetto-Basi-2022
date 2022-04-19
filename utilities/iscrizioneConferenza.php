@@ -49,8 +49,8 @@
 
     }
     
-    echo " Sarai rendeirizzato automaticamente alla pagina delle conferenze...";
-    header("Refresh: 2; URL=http://localhost/conferenze.php");
+    echo " Sarai rendeirizzato automaticamente alla pagina della conferenza";
+    header("Refresh: 2; URL=http://localhost/conferenze/dettagli.php?Anno=$anno&Acronimo=$acronimo");
     ?>
 </body>
 
