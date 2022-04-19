@@ -55,7 +55,7 @@ if (
             // SETUP LOADING LOGO
             $target_dir = __DIR__ . "/../assets/imgs/conferenza/";
             $targetfinale = $target_dir . basename($_FILES["logo"]["name"]);
-            
+
             $imageFileType = strtolower(pathinfo($targetfinale, PATHINFO_EXTENSION));
 
             if (UPLOAD_ERR_OK !== $_FILES["logo"]['error']) {
@@ -67,7 +67,7 @@ if (
                 } else {
                     if ($_FILES["logo"]["size"] > 400000) {
                         // file troppo grande!
-                        
+
                     } else {
                         if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_dir . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType)) {
                             $logopath = $target_dir . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType;
@@ -110,21 +110,42 @@ if (
     $currentPage = __FILE__;
     include "../utilities/navigationBar.php";
     ?>
-    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
-        Acronimo: <input type="text" name="acronimo" autocomplete="off">
-        <span id="result"></span>
-        <br>
-        Anno Edizione: <input type="text" name="annoEdizione" id="" autocomplete="off" required>
-        <br>
-        Nome conferenza: <input type="text" name="nome" autocomplete="off" equired>
-        <br>
-        <!-- Data di Nascita: <input type="date" name="data" id="" min="1920-01-01" max="2022-12-31" required> !-->
-        <input type="date" name="inizio" id="" min="1920-01-01" max="2022-12-31" required>
-        <input type="date" name="fine" id="" min="1920-01-01" max="2022-12-31" required>
-        <input type="file" name="logo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" required>
-        <input type="submit" value="invia">
-        <?php 
-        if ($uploadOk == 0){
+   <div class="card text-center mx-auto mt-4" style="max-width: 18rem;">
+    <div class="card-header">
+        Crea una Conferenza
+    </div>
+    <div class="card-body">
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Acronimo</label>
+                <input type="text" name="acronimo" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Logo Sponsor</label>
+                <input type="file" name="logo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Anno Edizione</label>
+                <input type="text" name="annoEdizione" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <input type="text" name="nome" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Data di inizio Conferenza</label>
+                <input type="date" name="inizio" min="1920-01-01" max="2022-12-31" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Data di fine Conferenza</label>
+                <input type="date" name="fine" min="1920-01-01" max="2022-12-31" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Crea</button>
+        </form>
+    </div>
+</div>
+        <?php
+        if ($uploadOk == 0) {
             //stampa qualcosa//
         }
         ?>
