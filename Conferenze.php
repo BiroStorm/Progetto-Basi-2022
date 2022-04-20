@@ -7,22 +7,27 @@ if (isset($_SESSION["username"])) {
     $username = $_SESSION["username"];
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conferenze</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 </head>
 
 <body>
+
     <!-- START Navigation Bar -->
     <?php
     $currentPage = __FILE__;
     include "./utilities/navigationBar.php";
     ?>
     <!-- END Navigation Bar -->
-
-    <h1>Conferenze disponibili</h1>
+    <h1 class="text-center m-4">Conferenze disponibili</h1>
     <?php
     $sql = "CALL VisualizzaConferenze(1)";
     $st = $pdo->query($sql);
@@ -34,36 +39,34 @@ if (isset($_SESSION["username"])) {
 
 
         foreach ($conferenze as $record) {
-    ?>      
+    ?>
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="<?php echo $record->Logo ?>" class="img-fluid  w-100 h-100 rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $record->Nome ?></h5>
 
-            <div class="row no-gutters bg-light position-relative">
-                <div class="col-md-6 mb-md-0 p-md-4">
-                    <img src="<?php echo $record->Logo ?>" class="img-thumbnail" alt="..." style="width:800px; height: 200px;">
+                            <?php if (strcmp("Attiva", $record->Svolgimento) == 0) {
+                                echo "Status: <p class='text-success'>Attiva</p>";
+                            } else {
+                                echo "Status: <p class='text-danger'>Completata</p>";
+                            }
+                            ?>
+
+                            <p class="card-text"><small class="text-muted"><?php echo "Creatore: $record->Creatore"; ?></small></p>
+
+                            <a href="<?php echo "/conferenze/dettagli.php?Anno=$record->AnnoEdizione&Acronimo=$record->Acronimo" ?>" class="stretched-link">Dettagli</a>
+                        </div>
+                    </div>
                 </div>
-            <div class="col-md-6 position-static p-4 pl-md-0">
-                <h5 class="mt-0"><?php echo $record->Nome ?></h5>
-                <h6 class="card-subtitle mb-2 text-muted"><?php echo $record->Acronimo ?> - <?php echo $record->AnnoEdizione ?></h6>
-                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-                <a href="<?php echo "/conferenze/dettagli.php?Anno=$record->AnnoEdizione&Acronimo=$record->Acronimo" ?>" class="stretched-link">Dettagli</a>
             </div>
-            </div>
-            <?php echo "<br>" ?>
     <?php
         }
     }
     ?>
-
-    <script>
-        function iscriviUtente(Anno, Acronimo, Username) {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("result").innerHTML = this.responseText;
-                }
-            };
-            xmlhttp.open("GET", "/user/checkUsername.php?anno=" + Anno + "&acronimo=" + Acronimo + "&Username", true);
-            xmlhttp.send();
-        }
-    </script>
 </body>
+
 </html>

@@ -43,7 +43,7 @@ if (
             $sql = 'CALL NuovaConferenza(?, ?, ?, ?, ?, ?, ?)';
             $res = $pdo->prepare($sql);
 
-            $logopath = __DIR__ . "/../assets/imgs/conferenza/default.png";
+            $logopath = "/assets/imgs/conferenza/default.png";
             $res->bindValue(1, $_SESSION["username"]);
             $res->bindValue(2, $_POST["acronimo"]);
             $res->bindValue(3, $_POST["annoEdizione"]);
@@ -65,12 +65,14 @@ if (
                 if ($check == false || ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg")) {
                     // non è un img
                 } else {
-                    if ($_FILES["logo"]["size"] > 400000) {
+                    if ($_FILES["logo"]["size"] > 800000) {
                         // file troppo grande!
+                        echo "file troppo grande!";
+                        exit;
 
                     } else {
                         if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_dir . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType)) {
-                            $logopath = $target_dir . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType;
+                            $logopath = "/assets/imgs/conferenza/" . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType;
                         } else {
                             //errore con l'uploading del file
                             echo "error";

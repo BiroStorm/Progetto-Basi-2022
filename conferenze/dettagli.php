@@ -56,7 +56,7 @@ if (isset($_SESSION["username"])) {
         <div class="position-absolute top-0 end-0 mt-4 translate-middle">
             <?php
                 // se è loggato e lo svolgimento è attivo, mostrare pulsante o scritta d'iscrizione.
-                if(isset($_SESSION["authorized"]) && strcmp("Attiva", $row["Svolgimento"])){
+                if(isset($_SESSION["authorized"]) && strcmp("Attiva", $row["Svolgimento"]) == 0){
                     //controlla se è già iscritto
                     $sql = "SELECT 1 FROM Registrazione WHERE UsernameUtente = ? AND AcronimoConf = ? AND AnnoEdizione = ?";
                     $res = $pdo->prepare($sql);
@@ -81,7 +81,7 @@ if (isset($_SESSION["username"])) {
         <h6 class="text-center text-secondary"><?php echo ("Le sponsorizzazioni per questa conferenza sono: ".$row["Totale_Sponsorizzazioni"]) ?></h6>
         <img class="confLogo rounded mx-auto d-block" src="<?php echo $row["Logo"];?>"/>
         
-        <h5 class="text-center">Status: <?php if (strcmp("Attiva", $row["Svolgimento"])){
+        <h5 class="text-center mt-2">Status: <?php if (strcmp("Attiva", $row["Svolgimento"]) == 0){
                 echo "<p class='text-success text-center'>Attiva</p>";
             }else{
                 echo "<p class='text-danger text-center'>Completata</p>";

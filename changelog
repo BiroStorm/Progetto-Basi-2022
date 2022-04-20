@@ -24,3 +24,8 @@ TODO: Gestire il caso in cui un utente accede a "dettagli.php" senza parametri o
 # 15-04-2022
 Creato pagine 404 e 403, sistemato il sistema di redirect in caso di pagine riservate.
 Creato cartella admin/ dove conterranno tutte le pagine riservate agli admin --> Spostato quindi il file creaConferenza.php
+
+# 20-04-2022
+Reso responsive la pagina delle conferenze.
+Fixato l'errore della conferenza "Attiva" quando in realtà era già Completata.
+Fixato il problema del path al file logo di default.
