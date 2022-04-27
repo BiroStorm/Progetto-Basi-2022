@@ -74,37 +74,28 @@ $username = $_SESSION['username'];
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            Dati Presenter e Speaker
+    <?php
+
+    if ((strcmp($_SESSION["role"], "Speaker") == 0) || (strcmp($_SESSION["role"], "Presenter") == 0)) {
+    ?>
+        <div class="card">
+            <div class="card-header">
+                Dati Presenter e Speaker
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" class="form-control" id="" placeholder="<?php echo $username ?>" readonly>
+                        <small id="" class="form-text text-muted">L'username non può essere modificato.</small>
+                    </div>
+                    
+                </form>
+            </div>
         </div>
-        <div class="card-body">
-            <form>
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" class="form-control" id="" placeholder="<?php echo $username ?>" readonly>
-                    <small id="" class="form-text text-muted">L'username non può essere modificato.</small>
-                </div>
-                <div class="form-group">
-                    <label>Nome</label>
-                    <input type="text" class="form-control" id="" value="<?php echo $nome ?>">
-                </div>
-                <div class="form-group">
-                    <label>Cognome</label>
-                    <input type="text" class="form-control" id="" value="<?php echo $cognome ?>">
-                </div>
-                <div class="form-group">
-                    <label>Data di Nascita</label>
-                    <input type="date" class="form-control" id="" value="<?php echo $dataNascita ?>">
-                </div>
-                <div class="form-group">
-                    <label>Luogo di Nascita</label>
-                    <input type="text" class="form-control" id="" value="<?php echo $luogoNascita ?>">
-                </div>
-                <button type="submit" class="btn btn-primary">Aggiorna i dati</button>
-            </form>
-        </div>
-    </div>
+    <?php
+    }
+    ?>
 </body>
 
 </html>

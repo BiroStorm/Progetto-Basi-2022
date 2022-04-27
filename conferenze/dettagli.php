@@ -89,7 +89,14 @@ if (isset($_SESSION["username"])) {
         ?>
         </h5>
         <?php
+            }else{
+                //Conferenza non Esiste:
+                header("Location: /404.php");
+                exit();
             }
+        }else{
+            header("Location: /conferenze.php");
+            exit();
         }
         ?>
     </div>

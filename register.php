@@ -18,8 +18,7 @@ if (
         $res->execute();
         if ($res->rowCount() == 1) {
             // Username Già Presente!
-
-            header('Location: errorPage.php?error="Username già registrato!"');
+            header('Location: /errorPage.php?error="Username già registrato!"');
             exit();
         } else {
 
