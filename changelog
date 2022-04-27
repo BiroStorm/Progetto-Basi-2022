@@ -29,3 +29,8 @@ Creato cartella admin/ dove conterranno tutte le pagine riservate agli admin -->
 Reso responsive la pagina delle conferenze.
 Fixato l'errore della conferenza "Attiva" quando in realtà era già Completata.
 Fixato il problema del path al file logo di default.
+
+# 27-04-2022
+Sistemato vari bug + creato file imgValidator.js dove c'è la funziona in caso di upload di foto.
+Creato pagina errorPage.php da usare solo in caso di errori da gestire indirettamente.
+Creato validatore per la Creazione dello Sponsor e anche per pagine di Register.php

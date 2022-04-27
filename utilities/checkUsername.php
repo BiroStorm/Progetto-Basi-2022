@@ -13,7 +13,7 @@ if ($q !== "") {
         echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
         exit();
     }
-    echo $res->rowCount() == 1 ? "Username Occupato!" : "Username Libero!";
+    echo $res->rowCount() == 1 ? "Username Occupato!" : "";
 }else{
     echo "";
 }

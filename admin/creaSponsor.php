@@ -15,8 +15,8 @@ if (isset($_SESSION['authorized'])) {
 
 // if $_POST is set:
 if (isset($_POST["nome"])) {
-    
-    $target_dir = __DIR__."/../assets/imgs/sponsor/";
+
+    $target_dir = __DIR__ . "/../assets/imgs/sponsor/";
     $targetfinale = $target_dir . basename($_FILES["logo"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($targetfinale, PATHINFO_EXTENSION));
@@ -32,7 +32,7 @@ if (isset($_POST["nome"])) {
             if ($_FILES["logo"]["size"] > 400000) {
                 // file troppo grande!
             } else {
-                if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_dir . $_POST["nome"] .".". $imageFileType)) {
+                if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_dir . $_POST["nome"] . "." . $imageFileType)) {
                     echo "uploaded";
                 } else {
                     //errore con l'uploading del file
@@ -68,20 +68,26 @@ if (isset($_POST["nome"])) {
         <div class="card-header">
             Crea uno Sponsor
         </div>
-        <div class="card-body">
-            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+
+            <div class="card-body">
                 <div class="mb-3">
                     <label class="form-label">Nome Sponsor</label>
-                    <input type="text" name="nome" class="form-control" required>
+                    <input type="text" id="nomeSponsor" name="nome" class="form-control" maxlength="50" minlength="3" onchange="checkForm();" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Logo Sponsor</label>
-                    <input type="file" name="logo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" required>
+                    <input type="file" id="inputfile" name="logo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" onchange="checkForm();" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Crea</button>
-            </form>
-        </div>
+            </div>
+            <div class="card-footer">
+                <button type="reset" class="btn btn-primary">Reset</button>
+                <button type="submit" id="creabtn" class="btn btn-primary" disabled>Crea</button>
+            </div>
+        </form>
     </div>
+    <script src="/js/imgValidator.js"></script>
+    <script src="/js/admin/creaSponsor.js"></script>
 </body>
 
 </html>
