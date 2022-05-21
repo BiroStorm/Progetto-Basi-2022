@@ -83,7 +83,7 @@ if (
 
             if ($res->execute()) {
                 echo "Creazione conferenza Completata! <br> Redirect in corso...";
-                header("Refresh: 1; URL=/conferenze.php");
+                header("Refresh: 0.7; URL=/conferenze.php");
             } else {
                 // esecuzione fallita...
             }
@@ -123,7 +123,7 @@ if (
                 <input type="text" name="acronimo" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Logo Sponsor</label>
+                <label class="form-label">Logo Conferenza</label>
                 <input type="file" name="logo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" required>
             </div>
             <div class="mb-3">

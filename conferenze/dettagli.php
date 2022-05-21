@@ -2,10 +2,6 @@
 //CONNESSIONE AL DB
 include '../utilities/databaseSetup.php';
 session_start();
-$username = null;
-if (isset($_SESSION["username"])) {
-    $username = $_SESSION["username"];
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,6 +52,7 @@ if (isset($_SESSION["username"])) {
         <div class="position-absolute top-0 end-0 mt-4 translate-middle">
             <?php
                 // se è loggato e lo svolgimento è attivo, mostrare pulsante o scritta d'iscrizione.
+                // + se è admin tasto di "Modifica"
                 if(isset($_SESSION["authorized"]) && strcmp("Attiva", $row["Svolgimento"]) == 0){
                     //controlla se è già iscritto
                     $sql = "SELECT 1 FROM Registrazione WHERE UsernameUtente = ? AND AcronimoConf = ? AND AnnoEdizione = ?";
@@ -70,7 +67,12 @@ if (isset($_SESSION["username"])) {
                     }else{
                         //utente NON registrato alla conferenzza
                         echo "<a href='/utilities/iscrizioneConferenza.php?Anno=$anno&Acronimo=$acronimo' class='btn btn-primary'>Iscriviti</a>";
-                        
+                    }
+
+                    // Tasto Modifica per gli Admin
+                    if(isset($_SESSION["role"]) && strcmp("Admin", $_SESSION["role"]) == 0){
+                        // è un admin
+                        echo "<a href='/admin/modificaConferenza.php?Anno=$anno&Acronimo=$acronimo' class='btn btn-outline-secondary'>Modifica Conferenza</a>";
                     }
                 }
             ?>

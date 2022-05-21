@@ -34,3 +34,11 @@ Fixato il problema del path al file logo di default.
 Sistemato vari bug + creato file imgValidator.js dove c'è la funziona in caso di upload di foto.
 Creato pagina errorPage.php da usare solo in caso di errori da gestire indirettamente.
 Creato validatore per la Creazione dello Sponsor e anche per pagine di Register.php
+
+# 17-05-2022
+Collegato il DB con la creazione dello Sponsor (Completata).
+Aggiunto link da dettagli alla modifica della conferenza, per aggiunta sessioni o modifica sponsor.
+
+# 20-05-2022
+Creazione file modificaConferenza.php dove si possono modificare i dati della conferenza, aggiungere e rimuovere sponsor. Creato file di utilità rimuoviSponsorDaConf.php che serve per rimuovere uno sponsor; questa pagina riporta l'utente nel modificaConferenza.php così da far sembrare che abbia fatto solo un reload.
+Piccoli Bug & Fix su alcune pagine.

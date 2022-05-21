@@ -50,7 +50,7 @@ $username = $_SESSION['username'];
             <form>
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" class="form-control" id="" placeholder="<?php echo $username ?>" readonly>
+                    <input type="text" class="form-control" id="" value="<?php echo $username ?>" readonly>
                     <small id="" class="form-text text-muted">L'username non può essere modificato.</small>
                 </div>
                 <div class="form-group">

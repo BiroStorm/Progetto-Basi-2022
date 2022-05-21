@@ -17,11 +17,11 @@ function checkUsername(str) {
 
 function checkForm() {
 
-    var nomeSponsor = document.getElementById('nomeSponsor').value;
+    var nomeSponsor = document.getElementById('nome').value;
     if (nomeSponsor.length < 3 && document.getElementById("result").value == "") return disableButton();
 
 
-    var nomeSponsor = document.getElementById('cognomeSponsor');
+    var nomeSponsor = document.getElementById('cognome');
     if (nomeSponsor.value.length < 3) return disableButton();
 
     /*

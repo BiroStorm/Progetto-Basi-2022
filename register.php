@@ -76,10 +76,10 @@ if (
                     </div>
                     <div id="result" class="form-text"></div>
                     <label for="" class="form-label mt-2">Nome:</label>
-                    <input type="text" name="nome" id="nomeSponsor" class="form-control" autocomplete="off" required>
+                    <input type="text" name="nome" id="nome" class="form-control" autocomplete="off" required>
 
                     <label for="" class="form-label mt-2">Cognome:</label>
-                    <input type="text" name="cognome" id="cognomeSponsor" class="form-control" autocomplete="off" required>
+                    <input type="text" name="cognome" id="cognome" class="form-control" autocomplete="off" required>
 
                     <label for="" class="form-label mt-2">Data di Nascita:</label>
                     <input type="date" name="data" id="dataNascita" class="form-control" id="" min="1920-01-01" max="2022-12-31" required>
