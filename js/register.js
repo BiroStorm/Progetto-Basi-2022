@@ -43,11 +43,13 @@ function disableButton() {
 function isValidPass() {
     var pass1 = document.getElementById('pass1').value;
     var regex = /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).{8,}$/;
-
+    console.log("Check Password...")
     if (!regex.test(pass1)) {
-        document.getElementById('firstPass').innerHTML = "Deve contenere almeno 1 numero, 1 lettera maiuscola e minuscola, deve essere lungo almeno 8 caratteri!";
+        console.log("NOP");
+        document.getElementById('firstPass').innerHTML = "Deve contenere almeno 1 numero, 1 lettera maiuscola e minuscola e un simbolo, deve essere lungo almeno 8 caratteri!";
         return disableButton();
     } else {
+        console.log("YEP");
         document.getElementById('firstPass').innerHTML = "";
         return true;
     }

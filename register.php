@@ -111,3 +111,9 @@ if (
 <script src="js/register.js"></script>
 
 </html>
+
+<?php
+# Presenter1 : Presenter@1
+# admin : admin
+# Utente1 : Utente!1 
+?>

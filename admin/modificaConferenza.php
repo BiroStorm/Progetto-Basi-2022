@@ -163,7 +163,7 @@ $row = $st->fetch(PDO::FETCH_OBJ);
 
 
 
-    <!-- Sponsor della Conferenza -->
+    <!-- CARD Sponsor della Conferenza -->
     <div class="card m-4">
         <div class="card-header">
             Sponsor della Conferenza
@@ -190,20 +190,21 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                         exit();
                     }
                     if ($st->rowCount() > 0) {
-                        while ($row = $st->fetch(PDO::FETCH_OBJ)) {
-                            echo "<li class='list-group-item' id='$row->NomeSponsor'>$row->NomeSponsor"
+                        while ($row2 = $st->fetch(PDO::FETCH_OBJ)) {
+                            echo "<li class='list-group-item' id='$row2->NomeSponsor'>$row2->NomeSponsor"
                     ?>
-                            <form action="/utilities/rimuoviSponsorDaConf.php" method="POST" class="float-end">
+                            <form action="/utilities/admin/rimuoviSponsorDaConf.php" method="POST" class="float-end">
                                 <button type="submit" class="btn btn-danger btn-sm float-end">Rimuovi</button>
                                 <input type="text" name="AnnoEdizione" value="<?php echo $_GET["Anno"] ?>" readonly hidden>
                                 <input type="text" name="Acronimo" value="<?php echo $_GET["Acronimo"] ?>" readonly hidden>
-                                <input type="text" name="NomeSponsor" value="<?php echo $row->NomeSponsor ?>" readonly hidden>
+                                <input type="text" name="NomeSponsor" value="<?php echo htmlspecialchars($row2->NomeSponsor) ?>" readonly hidden>
                             </form>
                             </li>
                     <?php
                         }
                     } ?>
                 </ul>
+
             </div>
             <!-- AGGIUNTA SPONSOR SECTION -->
             <form action="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>" method="POST" enctype="multipart/form-data">
@@ -229,8 +230,8 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                             if ($st->rowCount() == 0) {
                                 $exist = FALSE;
                             } else {
-                                while ($row = $st->fetch(PDO::FETCH_OBJ)) {
-                                    echo "<option value='$row->Nome'>$row->Nome</option>";
+                                while ($row3 = $st->fetch(PDO::FETCH_OBJ)) {
+                                    echo '<option value="' . htmlspecialchars($row3->Nome) . '">' . htmlspecialchars($row3->Nome) . '</option>';
                                 }
                             }
                         } catch (PDOException $e) {
@@ -244,6 +245,73 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                 <input type="text" name="modificaTipo" value="aggiungiSponsor" hidden>
                 <button type="submit" class="btn btn-primary mt-4" <?php if (!$exist) echo "disabled" ?>>Aggiungi Sponsor</button>
             </form>
+        </div>
+    </div>
+
+    <!-- CARD Aggiungi Sessione -->
+    <div class="card m-4">
+        <div class="card-header">
+            Aggiungi Sessione
+        </div>
+
+        <div class="card-body">
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            Sessioni Presenti
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+
+                            INSERIRE QUA LE SESSIONI GIà ESISTENTI
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Aggiungi Sessione
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <form action="/utilities/admin/aggiungiSessione.php" method="POST" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="AnnoEdizione" value="<?php echo $_GET["Anno"] ?>" readonly hidden>
+                                    <input type="text" class="form-control" name="Acronimo" value="<?php echo $_GET["Acronimo"] ?>" readonly hidden>
+                                </div>
+
+                                <!-- Codice, Link, Titolo, OraInizio, OraFine, Data, AcronimoConf, AnnoEdizione -->
+                                <div class="form-group mb-2">
+                                    <label>Titolo</label>
+                                    <input type="text" class="form-control" name="Titolo" placeholder="Inserisci il Titolo" required>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label>Data</label>
+                                    <input type="date" class="form-control" name="Data" min="<?php echo $row->DataInizio?>" max="<?php echo $row->DataFine?>" value="<?php echo $row->DataInizio?>"required>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label>Ora Inizio</label>
+                                    <input type="time" class="form-control" name="Inizio" value="08:00" required>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label>Ora Fine</label>
+                                    <input type="time" class="form-control" name="Fine" value="09:00" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Link</label>
+                                    <input type="text" class="form-control" name="Link" value="" placeholder="Link Teams">
+                                    <small>Puoi aggiungerlo anche dopo</small>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-4">Crea Sessione</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 

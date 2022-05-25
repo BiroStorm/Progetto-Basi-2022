@@ -42,3 +42,12 @@ Aggiunto link da dettagli alla modifica della conferenza, per aggiunta sessioni 
 # 20-05-2022
 Creazione file modificaConferenza.php dove si possono modificare i dati della conferenza, aggiungere e rimuovere sponsor. Creato file di utilità rimuoviSponsorDaConf.php che serve per rimuovere uno sponsor; questa pagina riporta l'utente nel modificaConferenza.php così da far sembrare che abbia fatto solo un reload.
 Piccoli Bug & Fix su alcune pagine.
+
+# 25-05-2022
+++ IL DB è stato resettato per qualche strano motivo ++
+++ Tutti i dati precedenti sono stati persi, compreso gli utenti e conferenze ++
+Update dettagli.php, in questo file metteremo tutto di una conferenza --> sessioni, tutorial, presentazioni etc.
+Nuova cartella Utilities/Admin dove sono i file "utilità" quindi senza visualizzazione html, riservato a coloro che hanno il permesso di admin. Spostato il file RimuoviSponsor e creato il file AggiungiSessione.php sempre li, dove viene richiamato da ModificaConferenza, quando si vuole creare una Sessione in una Conferenza.
+Creato la pagina gestionePersonale, dove si possono attribuire i ruoli ai vari utenti.
+Update a ModificaConferenza, ora si possono creare nuove sessioni nella conferenza
+TODO: Bisogna finire ModificaConferenza, con la visualizzazione delle conf già presenti.
