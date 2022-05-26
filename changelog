@@ -51,3 +51,15 @@ Nuova cartella Utilities/Admin dove sono i file "utilità" quindi senza visualiz
 Creato la pagina gestionePersonale, dove si possono attribuire i ruoli ai vari utenti.
 Update a ModificaConferenza, ora si possono creare nuove sessioni nella conferenza
 TODO: Bisogna finire ModificaConferenza, con la visualizzazione delle conf già presenti.
+
+
+# 26-05-2022
+Sistemato lo schema del progetto, ora i file php che interragiscono solamente col db per le operazioni CRUD vengono messi nella cartella /api.
+Completato il modificaConferenza.php con la creazione e visualizzazione delle sessioni, le quali porta al file modificaSessione.php (creato e connesso al proprio CSS e JS file), dove si visualizza le sessioni attualmente presenti, insieme alle presentazioni associato.
+Nel modificaSessione.php è presente anche il form per aggiungere Presentazioni, sia di tipo Tutorial che di tipo Articolo (da completare con gli altri campi ove neccessario).
+Entrambi i form porteranno al file /api/admin/aggiungiPresentazione.php (da creare)
+TODO: Capire come si vuole continuare e creare il file aggiungiPresentazione dove si controllano se i dati inseriti son corretti.
+
+
+! Creato visualizzazione Sessioni dentro alla modifica conferenza !
+TODO: metterlo anche su dettagli.php

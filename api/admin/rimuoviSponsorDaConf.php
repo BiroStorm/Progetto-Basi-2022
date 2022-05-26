@@ -1,5 +1,5 @@
 <?php
-include '../utilities/databaseSetup.php';
+include '../../utilities/databaseSetup.php';
 session_start();
 ########### [Autorizzazione] #############
 if (isset($_SESSION['authorized'])) {

@@ -89,6 +89,7 @@
                             $str += "<td>" . $row["Nome"] . "</td>";
                             $str += "<td>" . $row["Cognome"] . "</td>";
                             $str += "<td>" . $row["Username"] . "</td></tr>";
+                            echo $str;
                         }
                         ?>
                     </tbody>

@@ -193,7 +193,7 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                         while ($row2 = $st->fetch(PDO::FETCH_OBJ)) {
                             echo "<li class='list-group-item' id='$row2->NomeSponsor'>$row2->NomeSponsor"
                     ?>
-                            <form action="/utilities/admin/rimuoviSponsorDaConf.php" method="POST" class="float-end">
+                            <form action="/api/admin/rimuoviSponsorDaConf.php" method="POST" class="float-end">
                                 <button type="submit" class="btn btn-danger btn-sm float-end">Rimuovi</button>
                                 <input type="text" name="AnnoEdizione" value="<?php echo $_GET["Anno"] ?>" readonly hidden>
                                 <input type="text" name="Acronimo" value="<?php echo $_GET["Acronimo"] ?>" readonly hidden>
@@ -218,9 +218,7 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                         <?php
                         $exist = TRUE;
 
-                        /* $sql = "CALL SponsorMancanti(?, ?)"; // c'è un bug per cui non funziona */
-                        $sql = "SELECT * FROM Sponsor WHERE Nome NOT IN 
-                        (SELECT NomeSponsor FROM Sponsorizzazione WHERE AcronimoConf = ? AND AnnoEdizione = ?)";
+                        $sql = "CALL SponsorMancanti(?, ?)";
                         try {
                             $st = $pdo->prepare($sql);
                             $st->bindParam(1, $acronimo, PDO::PARAM_STR);
@@ -234,6 +232,7 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                                     echo '<option value="' . htmlspecialchars($row3->Nome) . '">' . htmlspecialchars($row3->Nome) . '</option>';
                                 }
                             }
+                            $st->closeCursor();
                         } catch (PDOException $e) {
                             echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
                             exit();
@@ -265,7 +264,84 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
 
-                            INSERIRE QUA LE SESSIONI GIà ESISTENTI
+                            <!-- SESSIONI ESISTENTI -->
+                            <?php
+                            // Ci ricaviamo le sessioni della conferenza:
+                            $sql2 = "CALL VisualizzazioneSessioni(?,?)";
+                            try {
+                                $st2 = $pdo->prepare($sql2);
+                                $st2->bindValue(1, $acronimo, PDO::PARAM_STR);
+                                $st2->bindValue(2, $anno, PDO::PARAM_INT);
+                                $st2->execute();
+
+                                if ($st2->rowCount() == 0) {
+                                    echo "Nessuna sessione presente!";
+                                } else {
+                                    /* fetchAll perchè non si può avere un result "attivo" mentre
+                                    // si fa un altra CALL.
+                                    // Quindi si ricava tutto il risultato di uno, si chiude il cursore
+                                    // per poi fare la query successiva! */
+                                    $allSession = $st2->fetchAll(PDO::FETCH_OBJ);
+                                    $st2->closeCursor();
+                                    
+                                    foreach ($allSession as $row4) {
+                            ?>
+
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><?php echo $row4->Titolo; ?></h5>
+                                                <h6 class="card-subtitle mb-2 text-muted"><?php echo $row4->Giorno; ?></h6>
+                                                <p class="card-text">Orario: <?php echo $row4->OraInizio . " - " . $row4->OraFine ?></p>
+                                                <p><a class="btn btn-outline-secondary" href="/admin/modificaSessione.php?Codice=<?php echo $row4->Codice?>" role="button">Modifica Sessione</a></p>
+                                                <?php if (empty($row4->Link)) {
+                                                    echo "<small>Nessun Link Presente</small>";
+                                                } else {
+                                                ?><a href="<?php echo $row4->Link ?>" class="card-link">Link</a>
+                                                <?php }
+                                                // Lista Presentazioni: 
+                                                $sql3 = "CALL VisualizzaPresentazioni(?)";
+                                                $st3 = $pdo->prepare($sql3);
+                                                $st3->bindValue(1, $row4->Codice, PDO::PARAM_INT);
+                                                $st3->execute();
+                                                if ($st3->rowCount() > 0) {
+                                                    // stampa le presentazioni della sessione:
+                                                ?>
+                                                    <table class="table table-striped table-hover">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th scope="col">#Sequenza</th>
+                                                                <th scope="col">Titolo</th>
+                                                                <th scope="col">Inizio</th>
+                                                                <th scope="col">Fine</th>
+                                                                <th scope="col">Tipologia</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            while ($presentazione = $st3->fetch(PDO::FETCH_OBJ)) {
+                                                                $str = "<tr><th scope='row'>" . $presentazione->Sequenza . "</th>";
+                                                                $str += "<td>" . $presentazione->Titolo . "</td>";
+                                                                $str += "<td>" . $presentazione->Inizio . "</td>";
+                                                                $str += "<td>" . $presentazione->Fine . "</td>";
+                                                                $str += "<td>" . $presentazione->Tipologia . "</td></tr>";
+                                                                echo $str;
+                                                            }
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                <?php
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                            <?php
+                                    }
+                                }
+                            } catch (PDOException $e) {
+                                echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
+                                exit();
+                            };
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -277,7 +353,7 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <form action="/utilities/admin/aggiungiSessione.php" method="POST" enctype="multipart/form-data">
+                            <form action="/api/admin/aggiungiSessione.php" method="POST" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <input type="text" class="form-control" name="AnnoEdizione" value="<?php echo $_GET["Anno"] ?>" readonly hidden>
                                     <input type="text" class="form-control" name="Acronimo" value="<?php echo $_GET["Acronimo"] ?>" readonly hidden>
@@ -290,7 +366,7 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                                 </div>
                                 <div class="form-group mb-2">
                                     <label>Data</label>
-                                    <input type="date" class="form-control" name="Data" min="<?php echo $row->DataInizio?>" max="<?php echo $row->DataFine?>" value="<?php echo $row->DataInizio?>"required>
+                                    <input type="date" class="form-control" name="Data" min="<?php echo $row->DataInizio ?>" max="<?php echo $row->DataFine ?>" value="<?php echo $row->DataInizio ?>" required>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label>Ora Inizio</label>
