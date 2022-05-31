@@ -61,5 +61,21 @@ Entrambi i form porteranno al file /api/admin/aggiungiPresentazione.php (da crea
 TODO: Capire come si vuole continuare e creare il file aggiungiPresentazione dove si controllano se i dati inseriti son corretti.
 
 
+[COMPLETE]
 ! Creato visualizzazione Sessioni dentro alla modifica conferenza !
-TODO: metterlo anche su dettagli.php
+TODO: metterlo anche su dettagli.php [COMPLETE]
+
+| Bisogna aggiungere al Articolo, gli input "AUTORI[index]" con nome e cognome (formato nome,cognome), poi dopo che lo si crea, l'admin può assegnare un Presenter alla Presentazione, basta che quest'ultimo abbia lo stesso Nome e Cognome |
+
+# 30-05-2022
+[COMPLETE] Gestione Errore di Iscrizione
+[COMPLETE] Creazione di Tutorial e Controllo di eventuali "Sovrapposizioni" nell'orario.
+[COMPLETE] Modifica Sessione, con la possibilità di aggiungere e modificare il link e i dati.
+
+# 31-05-2022
+[COMPLETE] Creazione di Articoli, con inserimento degli Autori e Parole Chiave (PDF compreso)
+[COMPLETE] Piccoli Bug & Fix sul database e codice SQL
+[Nota] Viene escluso da Github tutti i file PDF corrispondenti agli articoli presenti sul Database.
+
+[TODO] Sarebbe opportuno controllare dove si richiama una query direttamente e modificarlo usando una stored procedure.
+[TODO] Portare tutte le operazioni di Scrittura del DB nella cartella Api, quindi distaccato dal file principale.

@@ -104,6 +104,90 @@ session_start();
             ?>
         </h5>
     </div>
+    <div class="card m-4">
+        <div class="card-header">
+            Sessioni & Presentazioni
+        </div>
+        <div class="card-body">
+            <?php
+            // Ci ricaviamo le sessioni della conferenza:
+            $sql2 = "CALL VisualizzazioneSessioni(?,?)";
+            try {
+                $st2 = $pdo->prepare($sql2);
+                $st2->bindValue(1, $acronimo, PDO::PARAM_STR);
+                $st2->bindValue(2, $anno, PDO::PARAM_INT);
+                $st2->execute();
+
+                if ($st2->rowCount() == 0) {
+                    echo "Nessuna sessione presente!";
+                } else {
+                    /* fetchAll perchè non si può avere un result "attivo" mentre
+                                    // si fa un altra CALL.
+                                    // Quindi si ricava tutto il risultato di uno, si chiude il cursore
+                                    // per poi fare la query successiva! */
+                    $allSession = $st2->fetchAll(PDO::FETCH_OBJ);
+                    $st2->closeCursor();
+
+                    foreach ($allSession as $row4) {
+            ?>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo $row4->Titolo; ?></h5>
+                                <h6 class="card-subtitle mb-2 text-muted"><?php echo $row4->Giorno; ?></h6>
+                                <p class="card-text">Orario: <?php echo $row4->OraInizio . " - " . $row4->OraFine ?></p>
+                                <?php if (empty($row4->Link)) {
+                                    echo "<small>Nessun Link Presente</small>";
+                                } else {
+                                ?><a href="<?php echo $row4->Link ?>" class="card-link">Link</a>
+                                <?php }
+                                // Lista Presentazioni: 
+                                $sql3 = "CALL VisualizzaPresentazioni(?)";
+                                $st3 = $pdo->prepare($sql3);
+                                $st3->bindValue(1, $row4->Codice, PDO::PARAM_INT);
+                                $st3->execute();
+                                if ($st3->rowCount() > 0) {
+                                    // stampa le presentazioni della sessione:
+                                ?>
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col">#Sequenza</th>
+                                                <th scope="col">Titolo</th>
+                                                <th scope="col">Inizio</th>
+                                                <th scope="col">Fine</th>
+                                                <th scope="col">Tipologia</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            while ($presentazione = $st3->fetch(PDO::FETCH_OBJ)) {
+                                                $str = "<tr><th scope='row'>" . $presentazione->NumeroSequenza . "</th>";
+                                                $str .= "<td>" . $presentazione->Titolo . "</td>";
+                                                $str .= "<td>" . $presentazione->OraInizio . "</td>";
+                                                $str .= "<td>" . $presentazione->OraFine . "</td>";
+                                                $str .= "<td>" . $presentazione->Tipologia . "</td></tr>";
+                                                echo $str;
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+            <?php
+                    }
+                }
+            } catch (PDOException $e) {
+                echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
+                exit();
+            };
+            ?>
+        </div>
+    </div>
+    </div>
 
     <?php
     /*

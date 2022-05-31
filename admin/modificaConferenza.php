@@ -319,11 +319,11 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                                                         <tbody>
                                                             <?php
                                                             while ($presentazione = $st3->fetch(PDO::FETCH_OBJ)) {
-                                                                $str = "<tr><th scope='row'>" . $presentazione->Sequenza . "</th>";
-                                                                $str += "<td>" . $presentazione->Titolo . "</td>";
-                                                                $str += "<td>" . $presentazione->Inizio . "</td>";
-                                                                $str += "<td>" . $presentazione->Fine . "</td>";
-                                                                $str += "<td>" . $presentazione->Tipologia . "</td></tr>";
+                                                                $str = "<tr><th scope='row'>" . $presentazione->NumeroSequenza . "</th>";
+                                                                $str .= "<td>" . $presentazione->Titolo . "</td>";
+                                                                $str .= "<td>" . $presentazione->OraInizio . "</td>";
+                                                                $str .= "<td>" . $presentazione->OraFine . "</td>";
+                                                                $str .= "<td>" . $presentazione->Tipologia . "</td></tr>";
                                                                 echo $str;
                                                             }
                                                             ?>
