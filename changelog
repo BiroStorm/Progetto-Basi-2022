@@ -79,3 +79,9 @@ TODO: metterlo anche su dettagli.php [COMPLETE]
 
 [TODO] Sarebbe opportuno controllare dove si richiama una query direttamente e modificarlo usando una stored procedure.
 [TODO] Portare tutte le operazioni di Scrittura del DB nella cartella Api, quindi distaccato dal file principale.
+
+# 02-06-2022
+[COMPLETE] Visualizzazione Dati Tutorial, aggiunta di più Speaker al Tutorial (con controllo username);
+[COMPLETE] Gestione (Inserimento, Eliminazione, Visualizzazione) delle Presentazioni Preferite
+[COMPLETE] Creato una pagina di Redirect per reindirizzare l'Utente dato un Codice Presentazione
+[COMPLETE] Small Bug & Fix.

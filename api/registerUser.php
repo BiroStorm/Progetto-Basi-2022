@@ -28,7 +28,7 @@ if (
             $res->execute();
 
             echo "Registrazione Completata! <br> Redirect in corso...";
-            header("Refresh: 1; URL=login.php");
+            header("Refresh: 1; URL=/login.php");
         }
     } catch (PDOException $e) {
         echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());

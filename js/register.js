@@ -17,19 +17,20 @@ function checkUsername(str) {
 
 function checkForm() {
 
-    var nomeSponsor = document.getElementById('nome').value;
-    if (nomeSponsor.length < 3 && document.getElementById("result").value == "") return disableButton();
+    var nome = document.getElementById('nome').value;
+    if (nome.length < 2 || document.getElementById("result").value == "") return disableButton();
 
+    console.log("ok nome");
+    var cognome = document.getElementById('cognome');
+    console.log("controllo cognome...")
+    if (cognome.value.length < 2) return disableButton();
 
-    var nomeSponsor = document.getElementById('cognome');
-    if (nomeSponsor.value.length < 3) return disableButton();
+    console.log("ok cognome");
+    var luogoNascita = document.getElementById('luogoNascita');
+    console.log("controllo Luogo...")
+    if (luogoNascita.value.length < 3) return disableButton();
 
-    /*
-    var nomeSponsor = document.getElementById('dataNascita');
-    if (nomeSponsor.value.length < 3) return disableButton();
-    */
-    var nomeSponsor = document.getElementById('luogoNascita');
-    if (nomeSponsor.value.length < 5) return disableButton();
+    console.log("ok luogo");
 
     if (checkPass() && isValidPass()) document.getElementById('registerbtn').disabled = false;
 
@@ -43,13 +44,10 @@ function disableButton() {
 function isValidPass() {
     var pass1 = document.getElementById('pass1').value;
     var regex = /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).{8,}$/;
-    console.log("Check Password...")
     if (!regex.test(pass1)) {
-        console.log("NOP");
         document.getElementById('firstPass').innerHTML = "Deve contenere almeno 1 numero, 1 lettera maiuscola e minuscola e un simbolo, deve essere lungo almeno 8 caratteri!";
         return disableButton();
     } else {
-        console.log("YEP");
         document.getElementById('firstPass').innerHTML = "";
         return true;
     }
@@ -58,7 +56,7 @@ function isValidPass() {
 function checkPass() {
     var pass1 = document.getElementById('pass1').value;
     var pass2 = document.getElementById('pass2').value;
-    
+
     var text = document.getElementById('validPass');
 
     if (pass1 != pass2) {

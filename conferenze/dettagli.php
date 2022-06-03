@@ -2,9 +2,13 @@
 //CONNESSIONE AL DB
 include '../utilities/databaseSetup.php';
 session_start();
+if (!isset($_GET["Anno"], $_GET["Acronimo"])) {
+    header("Location: /conferenze.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 
 <head>
     <meta charset="utf-8">
@@ -32,10 +36,6 @@ session_start();
     ?>
     <!-- END Navigation Bar -->
     <?php
-    if (!isset($_GET["Anno"], $_GET["Acronimo"])) {
-        header("Location: /conferenze.php");
-        exit();
-    }
     $anno = $_GET["Anno"];
     $acronimo = $_GET["Acronimo"];
     $sql = 'SELECT Logo, Nome, Svolgimento, Totale_Sponsorizzazioni, DataInizio, DataFine, Creatore FROM Conferenza WHERE Acronimo=:x1 AND AnnoEdizione=:x2';
@@ -157,16 +157,25 @@ session_start();
                                                 <th scope="col">Inizio</th>
                                                 <th scope="col">Fine</th>
                                                 <th scope="col">Tipologia</th>
+                                                <th scope="col">Dettagli</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
                                             while ($presentazione = $st3->fetch(PDO::FETCH_OBJ)) {
-                                                $str = "<tr><th scope='row'>" . $presentazione->NumeroSequenza . "</th>";
+
+                                                $str = "<th scope='row'>" . $presentazione->NumeroSequenza . "</th>";
                                                 $str .= "<td>" . $presentazione->Titolo . "</td>";
                                                 $str .= "<td>" . $presentazione->OraInizio . "</td>";
                                                 $str .= "<td>" . $presentazione->OraFine . "</td>";
-                                                $str .= "<td>" . $presentazione->Tipologia . "</td></tr>";
+                                                $str .= "<td>" . $presentazione->Tipologia . "</td>";
+                                                if (strcmp($presentazione->Tipologia, "Tutorial") == 0) {
+                                                    $str .= '<td><a class="btn btn-primary" href="/conferenze/tutorial.php?Codice=' . $presentazione->Codice . '" role="button">Link</a></td>';
+                                                } else {
+                                                    $str .= '<td><a class="btn btn-primary" href="/conferenze/articolo.php?Codice=' . $presentazione->Codice . '" role="button">Link</a></td>';
+                                                }
+                                                $str .= "</tr>";
+
                                                 echo $str;
                                             }
                                             ?>
