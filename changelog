@@ -85,3 +85,7 @@ TODO: metterlo anche su dettagli.php [COMPLETE]
 [COMPLETE] Gestione (Inserimento, Eliminazione, Visualizzazione) delle Presentazioni Preferite
 [COMPLETE] Creato una pagina di Redirect per reindirizzare l'Utente dato un Codice Presentazione
 [COMPLETE] Small Bug & Fix.
+
+# 04-06-2022
+[COMPLETE] Associazione di un Presenter ad un Articolo
+[Info] Spostato lo script da tutorial.php in un file JS separato "likePresentazione.js" così da riutilizzarlo anche per gli Articoli. + Pulizia Codice.

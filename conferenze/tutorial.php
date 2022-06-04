@@ -46,35 +46,6 @@ $st->closeCursor();
     $currentPage = __FILE__;
     include "../utilities/navigationBar.php";
     ?>
-    <!-- modifica da ADMIN -->
-
-    <div class="position-relative">
-        <div class="position-absolute top-0 end-0 mt-5 translate-middle">
-            <?php
-
-            if (isset($_SESSION["authorized"])) {
-                // Aggiungi ai preferiti
-                // TODO
-                /*
-            $sql = "SELECT 1 FROM Registrazione WHERE UsernameUtente = ? AND AcronimoConf = ? AND AnnoEdizione = ?";
-            $res = $pdo->prepare($sql);
-            $res->bindValue(1, $_SESSION["username"]);
-            $res->bindValue(2, $acronimo);
-            $res->bindValue(3, $anno);
-            $res->execute();
-            if ($res->rowCount() > 0) {
-                //utente già registrato
-                echo '<h5 class="text-center text-success">Registrato</h5>';
-            } else {
-                // aggiungere like
-                echo "<a href='/TODOCOMPLETE.php?Anno=$tutorial->Codice' class='btn btn-primary'>Iscriviti</a>";
-            }
-            */
-            }
-            ?>
-        </div>
-    </div>
-
 
     <!-- Main Box -->
     <h2 class="text-center mt-4"><?php echo $tutorial->Titolo ?></h2>
@@ -96,11 +67,11 @@ $st->closeCursor();
         if ($stmt->rowCount() == 0) {
             // non ha messo ancora Like!
     ?>
-            <h6 class="text-center text-secondary "><i class="bi bi-heart fs-3 emptyheart" onclick="likePresentazione(1, this)"></i></h6>
+            <h6 class="text-center text-secondary "><i class="bi bi-heart fs-3 emptyheart" onclick="likePresentazione(1, <?php echo $_GET['Codice'] ?>, this)"></i></h6>
         <?php
         } else {
         ?>
-            <h6 class="text-center"><i class="bi bi-heart-fill fs-3 text-danger fullheart" onclick="likePresentazione(0, this)"></i></h6>
+            <h6 class="text-center"><i class="bi bi-heart-fill fs-3 text-danger fullheart" onclick="likePresentazione(0, <?php echo $_GET['Codice'] ?>, this)"></i></h6>
         <?php
         }
     } else {
@@ -198,33 +169,7 @@ $st->closeCursor();
     }
     ?>
     <script src="/js/admin/modificaTutorial.js"></script>
-    <script>
-        // Aggiungere ai Preferiti
-        function likePresentazione(value, element) {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    if (this.responseText != "") {
-                        console.log(this.responseText);
-                        document.getElementById("result").textContent = this.responseText;
-                    }
-                }
-            };
-            xmlhttp.open("POST", "/api/PrefPresentazione.php", true);
-            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xmlhttp.withCredentials = true;
-            xmlhttp.send("Codice=<?php echo $_GET["Codice"] ?>&add=" + value);
-            if (value) {
-                // cambiamo in cuore pieno
-                element.className = "bi bi-heart-fill fs-3 text-danger fullheart";
-                element.setAttribute("onclick", "likePresentazione(0, this)");
-            } else {
-                // da cuore pieno a cuore vuoto
-                element.className = "bi bi-heart fs-3 emptyheart";
-                element.setAttribute("onclick", "likePresentazione(1, this)");
-            }
-        }
-    </script>
+    <script src="/js/likePresentazione.js"></script>
 </body>
 
 </html>
