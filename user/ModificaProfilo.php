@@ -41,6 +41,43 @@ $username = $_SESSION['username'];
     $cognome = $row["Cognome"];
     $dataNascita = $row["DataNascita"];
     $luogoNascita = $row["LuogoNascita"];
+
+    // problemi ad aggiornare singolarmente i campi ci sono 2 idee
+    // fare un if per ogni campo da aggiornare
+    // oppure aggiornare ogni volta tutti i valori anche se se ne vuole modificare uno solo
+    // fare un button 'AGGIORNA' per ogni campo da aggiornare 
+    if (strcmp($_SESSION["role"], "Speaker") == 0) {
+
+    } else if ((strcmp($_SESSION["role"], "Presenter") == 0)) {
+
+    }
+        // SETUP LOADING LOGO
+        $target_dir = __DIR__ . "/../assets/imgs/profili/";
+    $targetfinale = $target_dir . basename($_FILES["fotoProfilo"]["name"]);
+
+    $imageFileType = strtolower(pathinfo($targetfinale, PATHINFO_EXTENSION));
+
+    if (UPLOAD_ERR_OK !== $_FILES["fotoProfilo"]['error']) {
+        //errore nell'upload
+    } else {
+        $check = getimagesize($_FILES["fotoProfilo"]["tmp_name"]);
+        if ($check == false || ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg")) {
+            // non è un img
+        } else {
+            if ($_FILES["fotoProfilo"]["size"] > 800000) {
+                // file troppo grande!
+                echo "file troppo grande!";
+                exit;
+            } else {
+                if (move_uploaded_file($_FILES["fotoProfilo"]["tmp_name"], $target_dir . $nome . $cognome . "." . $imageFileType)) {
+                    $logopath = "/assets/imgs/profili/" . $nome . $cognome . "." . $imageFileType;
+                } else {
+                    //errore con l'uploading del file
+                    echo "error";
+                }
+            }
+        }
+    }
     ?>
     <div class="card">
         <div class="card-header">
@@ -88,8 +125,20 @@ $username = $_SESSION['username'];
                         <label>Username</label>
                         <input type="text" class="form-control" id="" placeholder="<?php echo $username ?>" readonly>
                         <small id="" class="form-text text-muted">L'username non può essere modificato.</small>
+                        <div class="mb-3">
+                            <label class="form-label">Inserimento CV</label>
+                            <input type="file" name="curriculum" class="form-control form-control-sm" accept="application/pdf,application/vnd.ms-excel" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Foto profilo</label>
+                            <input type="file" name="fotoProfilo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Affiliazione universitaria</label>
+                            <input type="text" name="nomeUni" class="form-control" required>
+                        </div>
                     </div>
-                    
+                    <button type="submit" class="btn btn-primary">Aggiorna i dati</button>
                 </form>
             </div>
         </div>
