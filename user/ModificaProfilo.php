@@ -42,17 +42,27 @@ $username = $_SESSION['username'];
     $dataNascita = $row["DataNascita"];
     $luogoNascita = $row["LuogoNascita"];
 
-    // problemi ad aggiornare singolarmente i campi ci sono 2 idee
-    // fare un if per ogni campo da aggiornare
-    // oppure aggiornare ogni volta tutti i valori anche se se ne vuole modificare uno solo
-    // fare un button 'AGGIORNA' per ogni campo da aggiornare 
-    if (strcmp($_SESSION["role"], "Speaker") == 0) {
+    $sql = 'SELECT * FROM Presenter WHERE Username = :usr1';
+    $res = $pdo->prepare($sql);
+    $res->bindValue(":usr1", $username);
+    $res->execute();
+    $row = $res->fetch();
+    $nomeUni = $row["NomeUni"];
 
-    } else if ((strcmp($_SESSION["role"], "Presenter") == 0)) {
-
+    try {
+        if (strcmp($_SESSION["role"], "Presenter") == 0) {
+            $sql = 'UPDATE Presenter SET NomeUni = :uninome WHERE Username = :usr1';
+            $res = $pdo->prepare($sql);
+            $res->bindValue(":usr1", $username);
+            $res->bindValue(":uninome", $_POST["nomeUni"]);
+            $res->execute();
+        }
+    } catch (PDOException $e) {
+        echo ("[ERRORE] Call Modifica Conferenza non riuscita. Errore: " . $e->getMessage());
+        exit;
     }
-        // SETUP LOADING LOGO
-        $target_dir = __DIR__ . "/../assets/imgs/profili/";
+    // SETUP LOADING LOGO
+    $target_dir = __DIR__ . "/../assets/imgs/profili/";
     $targetfinale = $target_dir . basename($_FILES["fotoProfilo"]["name"]);
 
     $imageFileType = strtolower(pathinfo($targetfinale, PATHINFO_EXTENSION));
@@ -127,15 +137,15 @@ $username = $_SESSION['username'];
                         <small id="" class="form-text text-muted">L'username non può essere modificato.</small>
                         <div class="mb-3">
                             <label class="form-label">Inserimento CV</label>
-                            <input type="file" name="curriculum" class="form-control form-control-sm" accept="application/pdf,application/vnd.ms-excel" required>
+                            <input type="file" name="curriculum" class="form-control form-control-sm" accept="application/pdf,application/vnd.ms-excel">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Foto profilo</label>
-                            <input type="file" name="fotoProfilo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" required>
+                            <input type="file" name="fotoProfilo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" value="<?php echo $foto ?>">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Affiliazione universitaria</label>
-                            <input type="text" name="nomeUni" class="form-control" required>
+                            <input type="text" name="nomeUni" class="form-control" value="<?php echo $nomeUni ?>">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Aggiorna i dati</button>
