@@ -85,11 +85,12 @@
                         // TODO: Testare se funziona quando le tabelle vengono popolate.
                         while ($row = $res->fetch()) {
                             $str = "<tr><th scope='row'>" . $counter . "</th>";
-                            $str += "<td>" . $row["Voto"] . "</td>";
-                            $str += "<td>" . $row["Nome"] . "</td>";
-                            $str += "<td>" . $row["Cognome"] . "</td>";
-                            $str += "<td>" . $row["Username"] . "</td></tr>";
+                            $str .= "<td>" . $row["Media"] . "</td>";
+                            $str .= "<td>" . $row["Nome"] . "</td>";
+                            $str .= "<td>" . $row["Cognome"] . "</td>";
+                            $str .= "<td>" . $row["Username"] . "</td></tr>";
                             echo $str;
+                            $counter += 1;
                         }
                         ?>
                     </tbody>

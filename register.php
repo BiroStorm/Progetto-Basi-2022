@@ -78,4 +78,5 @@ if (isset($_SESSION['authorized'])) {
 # Presenter1 : Presenter@1
 # admin : admin
 # Utente1 : Utente!1 
+# Speaker1 : @Speaker1
 ?>

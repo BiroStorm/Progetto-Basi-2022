@@ -16,6 +16,35 @@ if (!isset($_POST["username"], $_POST["codice"]) || empty($_POST["username"]) ||
 }
 $username = $_POST["username"];
 $codice = $_POST["codice"];
+// controlliamo che sia uno Speaker:
+$sql = "SELECT 1 FROM Speaker WHERE Username = ?";
+try {
+    $st = $pdo->prepare($sql);
+    $st->bindValue(1, $username);
+    $st->execute();
+    if ($st->rowCount() == 0) {
+        header('Location: /errorPage.php?error="Non è uno Speaker!"');
+        exit;
+    }
+} catch (PDOException $e) {
+    echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
+    exit;
+}
+// Controlliamo se è già uno Speaker del Tutorial
+$sql = "SELECT 1 FROM Insegnamento WHERE Username = ? AND CodiceTutorial = ?";
+try {
+    $st = $pdo->prepare($sql);
+    $st->bindValue(1, $username);
+    $st->bindValue(2, $codice);
+    $st->execute();
+    if ($st->rowCount() > 0) {
+        header('Location: /errorPage.php?error="Risulta già come Speaker!"');
+        exit;
+    }
+} catch (PDOException $e) {
+    echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
+    exit;
+}
 
 
 $sql = 'CALL AggiungiSpeaker(?, ?)';
@@ -31,4 +60,3 @@ try {
     echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
     exit;
 }
-

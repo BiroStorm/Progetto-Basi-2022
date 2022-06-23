@@ -139,7 +139,7 @@ if (!isset($_GET["Anno"], $_GET["Acronimo"])) {
                                 <?php if (empty($row4->Link)) {
                                     echo "<small>Nessun Link Presente</small>";
                                 } else {
-                                ?><a href="<?php echo $row4->Link ?>" class="card-link">Link</a>
+                                ?><a href="<?php echo $row4->Link ?>" class="card-link">Link alla Sessione</a>
                                 <?php }
                                 // Lista Presentazioni: 
                                 $sql3 = "CALL VisualizzaPresentazioni(?)";
@@ -170,9 +170,9 @@ if (!isset($_GET["Anno"], $_GET["Acronimo"])) {
                                                 $str .= "<td>" . $presentazione->OraFine . "</td>";
                                                 $str .= "<td>" . $presentazione->Tipologia . "</td>";
                                                 if (strcmp($presentazione->Tipologia, "Tutorial") == 0) {
-                                                    $str .= '<td><a class="btn btn-primary" href="/conferenze/tutorial.php?Codice=' . $presentazione->Codice . '" role="button">Link</a></td>';
+                                                    $str .= '<td><a class="btn btn-primary" href="/conferenze/tutorial.php?Codice=' . $presentazione->Codice . '" role="button">More Info</a></td>';
                                                 } else {
-                                                    $str .= '<td><a class="btn btn-primary" href="/conferenze/articolo.php?Codice=' . $presentazione->Codice . '" role="button">Link</a></td>';
+                                                    $str .= '<td><a class="btn btn-primary" href="/conferenze/articolo.php?Codice=' . $presentazione->Codice . '" role="button">More Info</a></td>';
                                                 }
                                                 $str .= "</tr>";
 

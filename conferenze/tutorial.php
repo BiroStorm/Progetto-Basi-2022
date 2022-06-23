@@ -115,31 +115,33 @@ $st->closeCursor();
             } else {
             ?>
                 <!-- Tabella degli Speaker che presentano il tutorial -->
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Username</th>
-                            <th scope="col">Cognome</th>
-                            <th scope="col">Nome</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        while ($speaker = $st->fetch(PDO::FETCH_OBJ)) {
-                            // per ogni speaker presente:
-                            // Nome, Cognome, Username
-                        ?>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <th scope="row"><?php echo $speaker->Username ?></th>
-                                <td><?php echo $speaker->Cognome ?></td>
-                                <td><?php echo $speaker->Nome ?></td>
+                                <th scope="col">Username</th>
+                                <th scope="col">Cognome</th>
+                                <th scope="col">Nome</th>
                             </tr>
-                    <?php
+                        </thead>
+                        <tbody>
+                            <?php
+                            while ($speaker = $st->fetch(PDO::FETCH_OBJ)) {
+                                // per ogni speaker presente:
+                                // Nome, Cognome, Username
+                            ?>
+                                <tr>
+                                    <th scope="row"><?php echo $speaker->Username ?></th>
+                                    <td><?php echo $speaker->Cognome ?></td>
+                                    <td><?php echo $speaker->Nome ?></td>
+                                </tr>
+                        <?php
+                            }
                         }
-                    }
-                    ?>
-                    </tbody>
-                </table>
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
 
         </div>
     </div>
@@ -165,9 +167,149 @@ $st->closeCursor();
             </div>
         </div>
 
+        <!-- Valutazione della Presentazione -->
+        <div class="card m-4">
+            <div class="card-header">
+                Valutazione della Presentazione
+            </div>
+            <div class="card-body">
+                <?php
+                $sql = "SELECT 1 FROM Valutazione WHERE UsernameAdmin = ? AND CodPresentazione = ?";
+                try {
+                    $st = $pdo->prepare($sql);
+                    $st->bindValue(1, $_SESSION["username"], PDO::PARAM_STR);
+                    $st->bindValue(2, $_GET["Codice"], PDO::PARAM_INT);
+                    $st->execute();
+                } catch (PDOException $e) {
+                    echo ("[ERRORE] Query SQL (get Valutazione) non riuscita. Errore: " . $e->getMessage());
+                    exit;
+                }
+                if ($st->rowCount() == 1) {
+                    echo "<p>Hai già valutato questa Presentazione!</p>";
+                } else {
+                ?>
+                    <form action="/api/admin/valutaPresentazione.php" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Voto</label>
+                            <select name="voto" class="form-control" id="" required>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Note</label>
+                            <input type="text" name="note" class="form-control" maxlength="50">
+                        </div>
+
+                        <input type="number" name="Codice" value="<?php echo $_GET["Codice"] ?>" hidden readonly>
+                        <button type="submit" class="btn btn-primary">Valuta Presentazione</button>
+                    </form>
+                <?php } ?>
+            </div>
+        </div>
+
     <?php
     }
     ?>
+
+    <!-- Sezione Risorse del Tutorial -->
+    <div class="card m-4">
+        <div class="card-header">
+            Risorse Aggiuntive
+        </div>
+        <div class="card-body">
+            <!-- Visualizzazione Risorse -->
+
+            <?php
+
+            $sql = "SELECT Link, Descrizione, UsernameSpeaker FROM Risorsa WHERE CodTutorial = ?";
+            try {
+                $st = $pdo->prepare($sql);
+                $st->bindValue(1, $_GET["Codice"], PDO::PARAM_INT);
+                $st->execute();
+            } catch (PDOException $e) {
+                echo ("[ERRORE] Query SQL (get Risorsa) non riuscita. Errore: " . $e->getMessage());
+                exit;
+            }
+            if ($st->rowCount() == 0) {
+                echo "<p>Non sono state aggiunte risorse.</p>";
+            } else {
+            ?>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Link</th>
+                                <th scope="col">Descrizione</th>
+                                <th scope="col">Speaker</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            while ($risorsa = $st->fetch(PDO::FETCH_OBJ)) {
+                                $str = '<td><a class="btn btn-primary" href="' . htmlspecialchars($risorsa->Link) . '">Link</a></td>';
+                                $str .= "<td>" . $risorsa->Descrizione . "</td>";
+                                $str .= "<td>" . $risorsa->UsernameSpeaker . "</td>";
+                                // se è lo Speaker della risorsa, crea tasto elimina.
+                                if (isset($_SESSION["username"]) && strcmp($risorsa->UsernameSpeaker, $_SESSION["username"]) == 0) {
+                                    $str .= '<td><a class="btn btn-danger" href="/api/speaker/eliminaRisorsa.php?Codice=' . $_GET["Codice"] . "&Link=" . htmlspecialchars($risorsa->Link) . '">Rimuovi</a></td>';
+                                }
+                                $str .= "</tr>";
+                                echo $str;
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- SEZIONE [Speaker] Modifica Risorse Aggiuntive -->
+                <?php
+            }
+            if (isset($_SESSION["authorized"])) {
+                $sql = "SELECT 1 FROM Insegnamento WHERE Username = ? AND CodiceTutorial = ?";
+                try {
+                    $st = $pdo->prepare($sql);
+                    $st->bindValue(1, $_SESSION["username"]);
+                    $st->bindValue(2, $_GET["Codice"]);
+                    $st->execute();
+                    if ($st->rowCount() > 0) {
+                ?>
+                        <form action="/api/speaker/aggiungiRisorsa.php" method="POST">
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Link</label>
+                                    <input type="url" name="Link" class="form-control" placeholder="http://https://www.google.it/" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Descrizione</label>
+                                    <input type="textarea" name="Descrizione" class="form-control" maxlength="255">
+                                </div>
+                            </div>
+
+                            <input type="number" name="Codice" value="<?php echo $_GET["Codice"] ?>" hidden readonly>
+                            <button type="submit" class="btn btn-primary">Aggiungi Risorsa</button>
+                        </form>
+            <?php
+                    }
+                } catch (PDOException $e) {
+                    echo ("[ERRORE] Query SQL (Select from Insegnamento) non riuscita. Errore: " . $e->getMessage());
+                    exit;
+                }
+            }
+            ?>
+        </div>
+    </div>
+
     <script src="/js/admin/modificaTutorial.js"></script>
     <script src="/js/likePresentazione.js"></script>
 </body>

@@ -15,10 +15,10 @@ function likePresentazione(value, codice, element) {
     if (value) {
         // cambiamo in cuore pieno
         element.className = "bi bi-heart-fill fs-3 text-danger fullheart";
-        element.setAttribute("onclick", "likePresentazione(0, this)");
+        element.setAttribute("onclick", "likePresentazione(0, " +codice + ", this)");
     } else {
         // da cuore pieno a cuore vuoto
         element.className = "bi bi-heart fs-3 emptyheart";
-        element.setAttribute("onclick", "likePresentazione(1, this)");
+        element.setAttribute("onclick", "likePresentazione(1, " +codice + ", this)");
     }
 }

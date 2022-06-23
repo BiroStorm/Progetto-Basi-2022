@@ -10,7 +10,7 @@ function checkUsername(str) {
                 document.getElementById("result").innerHTML = this.responseText;
             }
         };
-        xmlhttp.open("GET", "/utilities/checkUsername.php?q=" + str, true);
+        xmlhttp.open("GET", "/utilities/checkUsername.php?username=" + str, true);
         xmlhttp.send();
     }
 }

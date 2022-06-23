@@ -39,7 +39,6 @@ if (isset($_SESSION['authorized'])) {
                             ?>
                             <li><a class="dropdown-item" id="creaConferenza" href="/admin/creaConferenza.php">Crea Conferenza</a></li>
                             <li><a class="dropdown-item" id="creaConferenza" href="/admin/creaSponsor.php">Crea Sponsor</a></li>
-                            <li><a class="dropdown-item" id="creaConferenza" href="/admin/sessioneConferenza.php">Modifica Conferenza</a></li>
                             <li><a class="dropdown-item" id="creaConferenza" href="/admin/gestionePersonale.php">Gestione Personale</a></li>
                             <?php 
                                 }
