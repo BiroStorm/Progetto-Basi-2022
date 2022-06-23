@@ -48,6 +48,12 @@ $username = $_SESSION['username'];
     $res->execute();
     $row = $res->fetch();
     $nomeUni = $row["NomeUni"];
+    $curriculum = $row["Curriculum"];
+    $foto = $row["Foto"];
+    
+
+   
+
 
     try {
         if (strcmp($_SESSION["role"], "Presenter") == 0) {
@@ -55,6 +61,52 @@ $username = $_SESSION['username'];
             $res = $pdo->prepare($sql);
             $res->bindValue(":usr1", $username);
             $res->bindValue(":uninome", $_POST["nomeUni"]);
+            $res->execute();
+        } else if (strcmp($_SESSION["role"], "Speaker") == 0) {
+            $sql = 'UPDATE Speaker SET NomeUni = :uninome WHERE Username = :usr1';
+            $res = $pdo->prepare($sql);
+            $res->bindValue(":usr1", $username);
+            $res->bindValue(":uninome", $_POST["nomeUni"]);
+            $res->execute();
+        }
+    } catch (PDOException $e) {
+        echo ("[ERRORE] Call Modifica Conferenza non riuscita. Errore: " . $e->getMessage());
+        exit;
+    }
+
+    try {
+        if (strcmp($_SESSION["role"], "Presenter") == 0) {
+            $sql = 'UPDATE Presenter SET Curriculum = :curricola WHERE Username = :usr1';
+            $res = $pdo->prepare($sql);
+            $res->bindValue(":usr1", $username);
+            $res->bindValue(":curricola", $_POST["curriculum"]);
+            $res->execute();
+        } else if (strcmp($_SESSION["role"], "Speaker") == 0) {
+            $sql = 'UPDATE Speaker SET Curriculum = :curricola WHERE Username = :usr1';
+            $res = $pdo->prepare($sql);
+            $res->bindValue(":usr1", $username);
+            $res->bindValue(":curricola", $_POST["curriculum"]);
+            $res->execute();
+        }
+    } catch (PDOException $e) {
+        echo ("[ERRORE] Call Modifica Conferenza non riuscita. Errore: " . $e->getMessage());
+        exit;
+    }
+
+    try {
+        if (strcmp($_SESSION["role"], "Presenter") == 0) {
+            $logopath = "/assets/imgs/profili/default.png";
+            $sql = 'UPDATE Presenter SET Foto = :fotografia WHERE Username = :usr1';
+            $res = $pdo->prepare($sql);
+            $res->bindValue(":usr1", $username);
+            $res->bindValue(":fotografia", $logopath);
+            $res->execute();
+        } else if (strcmp($_SESSION["role"], "Speaker") == 0) {
+            $logopath = "/assets/imgs/profili/default.png";
+            $sql = 'UPDATE Speaker SET Foto = :fotografia WHERE Username = :usr1';
+            $res = $pdo->prepare($sql);
+            $res->bindValue(":usr1", $username);
+            $res->bindValue(":fotografia", $logopath);
             $res->execute();
         }
     } catch (PDOException $e) {
@@ -130,27 +182,33 @@ $username = $_SESSION['username'];
                 Dati Presenter e Speaker
             </div>
             <div class="card-body">
-                <form>
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label>Username</label>
                         <input type="text" class="form-control" id="" placeholder="<?php echo $username ?>" readonly>
                         <small id="" class="form-text text-muted">L'username non può essere modificato.</small>
                         <div class="mb-3">
                             <label class="form-label">Inserimento CV</label>
-                            <input type="file" name="curriculum" class="form-control form-control-sm" accept="application/pdf,application/vnd.ms-excel">
+                            <input type="file" name="curriculum" class="form-control form-control-sm" accept="application/pdf,application/vnd.ms-excel" required>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Foto profilo</label>
-                            <input type="file" name="fotoProfilo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" value="<?php echo $foto ?>">
-                        </div>
+                        <button type="submit" class="btn btn-primary">Aggiorna il CV</button>
+                </form>
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Foto profilo</label>
+                        <input type="file" name="fotoProfilo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" value="<?php echo $foto ?>" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Aggiorna la foto profilo</button>
+                    </form>
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label class="form-label">Affiliazione universitaria</label>
-                            <input type="text" name="nomeUni" class="form-control" value="<?php echo $nomeUni ?>">
+                            <input type="text" name="nomeUni" class="form-control" value="<?php echo $nomeUni ?>" required>
                         </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Aggiorna i dati</button>
-                </form>
             </div>
+            <button type="submit" class="btn btn-primary">Aggiorna l'affiliazione</button>
+            </form>
+        </div>
         </div>
     <?php
     }
