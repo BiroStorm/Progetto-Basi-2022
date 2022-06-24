@@ -59,25 +59,25 @@ if (
             $imageFileType = strtolower(pathinfo($targetfinale, PATHINFO_EXTENSION));
 
             if (UPLOAD_ERR_OK !== $_FILES["logo"]['error']) {
-                //errore nell'upload
-            } else {
-                $check = getimagesize($_FILES["logo"]["tmp_name"]);
-                if ($check == false || ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg")) {
-                    // non è un img
-                } else {
-                    if ($_FILES["logo"]["size"] > 800000) {
-                        // file troppo grande!
-                        echo "file troppo grande!";
-                        exit;
+                header('Location: /errorPage.php?error="Errore durante il caricamento."');
+                exit;
+            }
+            $check = getimagesize($_FILES["logo"]["tmp_name"]);
+            if ($check == false || ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg")) {
 
-                    } else {
-                        if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_dir . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType)) {
-                            $logopath = "/assets/imgs/conferenza/" . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType;
-                        } else {
-                            //errore con l'uploading del file
-                            echo "error";
-                        }
-                    }
+                header('Location: /errorPage.php?error="Non è un immagine"');
+                exit;
+            }
+            if ($_FILES["logo"]["size"] > 800000) {
+                // file troppo grande!
+                echo "file troppo grande!";
+                exit;
+            } else {
+                if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_dir . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType)) {
+                    $logopath = "/assets/imgs/conferenza/" . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType;
+                } else {
+                    //errore con l'uploading del file
+                    echo "error";
                 }
             }
 
@@ -112,46 +112,46 @@ if (
     $currentPage = __FILE__;
     include "../utilities/navigationBar.php";
     ?>
-   <div class="card text-center mx-auto mt-4" style="max-width: 18rem;">
-    <div class="card-header">
-        Crea una Conferenza
+    <div class="card text-center mx-auto mt-4" style="max-width: 18rem;">
+        <div class="card-header">
+            Crea una Conferenza
+        </div>
+        <div class="card-body">
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Acronimo</label>
+                    <input type="text" name="acronimo" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Logo Conferenza</label>
+                    <input type="file" name="logo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Anno Edizione</label>
+                    <input type="text" name="annoEdizione" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nome</label>
+                    <input type="text" name="nome" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Data di inizio Conferenza</label>
+                    <input type="date" name="inizio" min="1920-01-01" max="2022-12-31" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Data di fine Conferenza</label>
+                    <input type="date" name="fine" min="1920-01-01" max="2022-12-31" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Crea</button>
+            </form>
+        </div>
     </div>
-    <div class="card-body">
-        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label class="form-label">Acronimo</label>
-                <input type="text" name="acronimo" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Logo Conferenza</label>
-                <input type="file" name="logo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Anno Edizione</label>
-                <input type="text" name="annoEdizione" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Nome</label>
-                <input type="text" name="nome" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Data di inizio Conferenza</label>
-                <input type="date" name="inizio" min="1920-01-01" max="2022-12-31" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Data di fine Conferenza</label>
-                <input type="date" name="fine" min="1920-01-01" max="2022-12-31" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Crea</button>
-        </form>
-    </div>
-</div>
-        <?php
-        if ($uploadOk == 0) {
-            //stampa qualcosa//
-        }
-        ?>
-        <br>
+    <?php
+    if ($uploadOk == 0) {
+        //stampa qualcosa//
+    }
+    ?>
+    <br>
 </body>
 
 </html>
