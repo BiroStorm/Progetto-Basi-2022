@@ -31,6 +31,8 @@ $st->closeCursor();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[Articolo] <?php echo $articolo->Titolo ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+
 </head>
 
 <body>
@@ -222,6 +224,56 @@ $st->closeCursor();
                 <input type="number" name="codice" value="<?php echo $_GET["Codice"] ?>" hidden readonly>
 
                 </form>
+            </div>
+
+            <!-- Valutazione della Presentazione -->
+            <div class="card m-4">
+                <div class="card-header">
+                    Valutazione della Presentazione
+                </div>
+                <div class="card-body">
+                    <?php
+                    $sql = "SELECT 1 FROM Valutazione WHERE UsernameAdmin = ? AND CodPresentazione = ?";
+                    try {
+                        $st = $pdo->prepare($sql);
+                        $st->bindValue(1, $_SESSION["username"], PDO::PARAM_STR);
+                        $st->bindValue(2, $_GET["Codice"], PDO::PARAM_INT);
+                        $st->execute();
+                    } catch (PDOException $e) {
+                        echo ("[ERRORE] Query SQL (get Valutazione) non riuscita. Errore: " . $e->getMessage());
+                        exit;
+                    }
+                    if ($st->rowCount() == 1) {
+                        echo "<p>Hai già valutato questa Presentazione!</p>";
+                    } else {
+                    ?>
+                        <form action="/api/admin/valutaPresentazione.php" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Voto</label>
+                                <select name="voto" class="form-control" id="" required>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Note</label>
+                                <input type="text" name="note" class="form-control" maxlength="50">
+                            </div>
+
+                            <input type="number" name="Codice" value="<?php echo $_GET["Codice"] ?>" hidden readonly>
+                            <button type="submit" class="btn btn-primary">Valuta Presentazione</button>
+                        </form>
+                    <?php } ?>
+                </div>
             </div>
     </div>
 

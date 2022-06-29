@@ -1,0 +1,23 @@
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    max-height: 480px;
+    min-height: 480px;
+    overflow-y: scroll
+}
+
+.chat-message-left,
+.chat-message-right {
+    min-width: 30vw!important;
+    max-width: 50vw!important;
+
+}
+
+.chat-message-left {
+    margin-right: auto;
+}
+
+.chat-message-right {
+    margin-left: auto;
+}

@@ -306,10 +306,10 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                                                 if ($st3->rowCount() > 0) {
                                                     // stampa le presentazioni della sessione:
                                                 ?>
-                                                    <table class="table table-striped table-hover">
+                                                    <table class="table table-responsive table-striped table-hover">
                                                         <thead class="table-light">
                                                             <tr>
-                                                                <th scope="col">#Sequenza</th>
+                                                                <th scope="col">#Seq</th>
                                                                 <th scope="col">Titolo</th>
                                                                 <th scope="col">Inizio</th>
                                                                 <th scope="col">Fine</th>

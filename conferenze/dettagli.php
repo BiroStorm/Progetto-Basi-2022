@@ -6,6 +6,34 @@ if (!isset($_GET["Anno"], $_GET["Acronimo"])) {
     header("Location: /conferenze.php");
     exit();
 }
+$anno = $_GET["Anno"];
+$acronimo = $_GET["Acronimo"];
+$sql = 'SELECT Logo, Nome, Svolgimento, Totale_Sponsorizzazioni, DataInizio, DataFine, Creatore FROM Conferenza WHERE Acronimo=:x1 AND AnnoEdizione=:x2';
+// controllo eccezioni dato dal DB
+try {
+    $st = $pdo->prepare($sql); //Preparazione SQL 
+    $st->bindParam(":x1", $acronimo, PDO::PARAM_STR); //Inserire i valori reali nell'SQL
+    $st->bindValue(":x2", $anno, PDO::PARAM_INT);
+    $st->execute(); //Eseguire SQL
+} catch (PDOException $e) {
+    echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
+    exit();
+}
+
+if ($st->rowCount() == 0) {
+    //Conferenza non Esiste:
+    header("Location: /404.php");
+    exit();
+}
+//Controllo del numero di righe ritornate
+$row = $st->fetch(); //Ricava la prima riga del risultato e poi la salva nella variabile $row
+
+$periodo = new DatePeriod(
+    new DateTime($row["DataInizio"]),
+    new DateInterval('P1D'),
+    (new DateTime($row["DataFine"]))->modify("+1 day")
+);
+
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -35,36 +63,13 @@ if (!isset($_GET["Anno"], $_GET["Acronimo"])) {
     include "../utilities/navigationBar.php";
     ?>
     <!-- END Navigation Bar -->
-    <?php
-    $anno = $_GET["Anno"];
-    $acronimo = $_GET["Acronimo"];
-    $sql = 'SELECT Logo, Nome, Svolgimento, Totale_Sponsorizzazioni, DataInizio, DataFine, Creatore FROM Conferenza WHERE Acronimo=:x1 AND AnnoEdizione=:x2';
-    // controllo eccezioni dato dal DB
-    try {
-        $st = $pdo->prepare($sql); //Preparazione SQL 
-        $st->bindParam(":x1", $acronimo, PDO::PARAM_STR); //Inserire i valori reali nell'SQL
-        $st->bindValue(":x2", $anno, PDO::PARAM_INT);
-        $st->execute(); //Eseguire SQL
-    } catch (PDOException $e) {
-        echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
-        exit();
-    }
-
-    if ($st->rowCount() == 0) {
-        //Conferenza non Esiste:
-        header("Location: /404.php");
-        exit();
-    }
-    //Controllo del numero di righe ritornate
-    $row = $st->fetch(); //Ricava la prima riga del risultato e poi la salva nella variabile $row
-    ?>
     <div class="position-relative">
         <!-- Tasto Iscriviti/ testo "Sei già iscritto" -->
         <div class="position-absolute top-0 end-0 mt-4 translate-middle">
             <?php
             // se è loggato e lo svolgimento è attivo, mostrare pulsante o scritta d'iscrizione.
             // + se è admin tasto di "Modifica"
-            if (isset($_SESSION["authorized"]) && strcmp("Attiva", $row["Svolgimento"]) == 0) {
+            if (isset($_SESSION["authorized"])){
                 //controlla se è già iscritto
                 $sql = "SELECT 1 FROM Registrazione WHERE UsernameUtente = ? AND AcronimoConf = ? AND AnnoEdizione = ?";
                 $res = $pdo->prepare($sql);
@@ -104,102 +109,144 @@ if (!isset($_GET["Anno"], $_GET["Acronimo"])) {
             ?>
         </h5>
     </div>
-    <div class="card m-4">
-        <div class="card-header">
-            Sessioni & Presentazioni
-        </div>
-        <div class="card-body">
-            <?php
-            // Ci ricaviamo le sessioni della conferenza:
-            $sql2 = "CALL VisualizzazioneSessioni(?,?)";
-            try {
-                $st2 = $pdo->prepare($sql2);
-                $st2->bindValue(1, $acronimo, PDO::PARAM_STR);
-                $st2->bindValue(2, $anno, PDO::PARAM_INT);
-                $st2->execute();
+    <div class="accordion m-4">
+        <?php
+        $counter = 0;
+        foreach ($periodo as $key => $value) {
+            // per ogni giornata vediamo se c'è una sessione:
+            $counter++;
+        ?>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading<?php echo $counter; ?> ">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $counter; ?>" aria-expanded="false" aria-controls="collapseOne">
+                        Giorno <?php echo $value->format('Y-m-d') ?>
+                    </button>
+                </h2>
+                <div id="collapse<?php echo $counter; ?>" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <?php
+                        $sql2 = "CALL VisualizzazioneSessioniInData(?,?,?)";
+                        try {
+                            $st2 = $pdo->prepare($sql2);
+                            $st2->bindValue(1, $acronimo, PDO::PARAM_STR);
+                            $st2->bindValue(2, $anno, PDO::PARAM_INT);
+                            $st2->bindValue(3, $value->format('Y-m-d'));
+                            $st2->execute();
+                            if ($st2->rowCount() == 0) {
+                                echo "Non ci sono Sessioni Presenti per questa data!";
+                                $st2->closeCursor();
+                        ?>
 
-                if ($st2->rowCount() == 0) {
-                    echo "Nessuna sessione presente!";
-                } else {
-                    /* fetchAll perchè non si può avere un result "attivo" mentre
-                                    // si fa un altra CALL.
-                                    // Quindi si ricava tutto il risultato di uno, si chiude il cursore
-                                    // per poi fare la query successiva! */
-                    $allSession = $st2->fetchAll(PDO::FETCH_OBJ);
-                    $st2->closeCursor();
+                    </div>
+                </div>
+            </div>
+        <?php
+                                continue;
+                            }
+                            /* fetchAll perchè non si può avere un result "attivo" mentre
+                            // si fa un altra CALL.
+                            // Quindi si ricava tutto il risultato di uno, si chiude il cursore
+                            // per poi fare la query successiva! */
+                            $allSession = $st2->fetchAll(PDO::FETCH_OBJ);
+                            $st2->closeCursor();
+        ?>
 
-                    foreach ($allSession as $row4) {
-            ?>
-
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo $row4->Titolo; ?></h5>
-                                <h6 class="card-subtitle mb-2 text-muted"><?php echo $row4->Giorno; ?></h6>
-                                <p class="card-text">Orario: <?php echo $row4->OraInizio . " - " . $row4->OraFine ?></p>
-                                <?php if (empty($row4->Link)) {
+        <div class="card m-1">
+            <div class="card-header">
+                Sessioni & Presentazioni
+            </div>
+            <div class="card-body">
+                <?php
+                            // Ci ricaviamo le sessioni della conferenza:
+                            foreach ($allSession as $row4) {
+                ?>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $row4->Titolo; ?></h5>
+                            <h6 class="card-subtitle mb-2 text-muted"><?php echo $row4->Giorno; ?></h6>
+                            <p class="card-text">Orario: <?php echo $row4->OraInizio . " - " . $row4->OraFine ?></p>
+                            <?php if (empty($row4->Link)) {
                                     echo "<small>Nessun Link Presente</small>";
                                 } else {
-                                ?><a href="<?php echo $row4->Link ?>" class="card-link">Link alla Sessione</a>
-                                <?php }
-                                // Lista Presentazioni: 
+                            ?>
+                            <a href="<?php echo $row4->Link ?>" target='_blank' rel='noopener noreferrer' class="card-link">Link alla Sessione</a>
+                            <?php } 
+                            $today = strtotime("now");
+                            $inizio = strtotime($row4->Giorno . " " . $row4->OraInizio);
+                            $fine = strtotime($row4->Giorno . " " . $row4->OraFine);
+                                
+                            if (($today >= $inizio) && ($today <= $fine)){
+                                echo "<p><a href='/conferenze/chatSessione.php?Codice=$row4->Codice' target='_blank' rel='noopener noreferrer'>Link alla Chat di Sessione</a></p>";
+                            }else{
+                                echo "<p>Chat Sessione già Chiusa</p>";
+                            }
+                            
+                                // Lista Presentazioni:
                                 $sql3 = "CALL VisualizzaPresentazioni(?)";
                                 $st3 = $pdo->prepare($sql3);
                                 $st3->bindValue(1, $row4->Codice, PDO::PARAM_INT);
                                 $st3->execute();
                                 if ($st3->rowCount() > 0) {
                                     // stampa le presentazioni della sessione:
-                                ?>
-                                    <table class="table table-striped table-hover">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th scope="col">#Sequenza</th>
-                                                <th scope="col">Titolo</th>
-                                                <th scope="col">Inizio</th>
-                                                <th scope="col">Fine</th>
-                                                <th scope="col">Tipologia</th>
-                                                <th scope="col">Dettagli</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            while ($presentazione = $st3->fetch(PDO::FETCH_OBJ)) {
+                            ?>
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th scope="col">#Sequenza</th>
+                                            <th scope="col">Titolo</th>
+                                            <th scope="col">Inizio</th>
+                                            <th scope="col">Fine</th>
+                                            <th scope="col">Tipologia</th>
+                                            <th scope="col">Dettagli</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        while ($presentazione = $st3->fetch(PDO::FETCH_OBJ)) {
 
-                                                $str = "<th scope='row'>" . $presentazione->NumeroSequenza . "</th>";
-                                                $str .= "<td>" . $presentazione->Titolo . "</td>";
-                                                $str .= "<td>" . $presentazione->OraInizio . "</td>";
-                                                $str .= "<td>" . $presentazione->OraFine . "</td>";
-                                                $str .= "<td>" . $presentazione->Tipologia . "</td>";
-                                                if (strcmp($presentazione->Tipologia, "Tutorial") == 0) {
-                                                    $str .= '<td><a class="btn btn-primary" href="/conferenze/tutorial.php?Codice=' . $presentazione->Codice . '" role="button">More Info</a></td>';
-                                                } else {
-                                                    $str .= '<td><a class="btn btn-primary" href="/conferenze/articolo.php?Codice=' . $presentazione->Codice . '" role="button">More Info</a></td>';
-                                                }
-                                                $str .= "</tr>";
-
-                                                echo $str;
+                                            $str = "<th scope='row'>" . $presentazione->NumeroSequenza . "</th>";
+                                            $str .= "<td>" . $presentazione->Titolo . "</td>";
+                                            $str .= "<td>" . $presentazione->OraInizio . "</td>";
+                                            $str .= "<td>" . $presentazione->OraFine . "</td>";
+                                            $str .= "<td>" . $presentazione->Tipologia . "</td>";
+                                            if (strcmp($presentazione->Tipologia, "Tutorial") == 0) {
+                                                $str .= '<td><a class="btn btn-primary" href="/conferenze/tutorial.php?Codice=' . $presentazione->Codice . '" role="button">More Info</a></td>';
+                                            } else {
+                                                $str .= '<td><a class="btn btn-primary" href="/conferenze/articolo.php?Codice=' . $presentazione->Codice . '" role="button">More Info</a></td>';
                                             }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                <?php
+                                            $str .= "</tr>";
+
+                                            echo $str;
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            <?php
                                 }
-                                ?>
-                            </div>
+                                $st3->closeCursor();
+                            ?>
                         </div>
+                    </div>
             <?php
-                    }
-                }
-            } catch (PDOException $e) {
-                echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
-                exit();
-            };
+                            }
+                        } catch (PDOException $e) {
+                            echo ("[ERRORE] Errore: " . $e->getMessage());
+                            exit();
+                        };
+
             ?>
+            </div>
         </div>
     </div>
     </div>
+    </div>
 
-    <?php
-    /*
+<?php };
+?>
+</div>
+
+<?php
+/*
         # VARI BUG, DA RIGUARDARCI SE C'è TEMPO #
         if ($row["Totale_Sponsorizzazioni"] > 0) {
             // carosello degli sponsor

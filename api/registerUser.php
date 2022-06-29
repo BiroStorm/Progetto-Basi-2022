@@ -18,13 +18,13 @@ if (
 
             $sql = 'INSERT INTO Utente(Username, Nome, Cognome, Password, DataNascita, LuogoNascita) VALUES(:x1, :x2, :x3, :x4, :x5, :x6)';
             $res = $pdo->prepare($sql);
-            $res->bindValue(":x1", strtolower($_POST["username"]));
-            $res->bindValue(":x2", strtolower($_POST["nome"]));
-            $res->bindValue(":x3", strtolower($_POST["cognome"]));
+            $res->bindValue(":x1", strip_tags(strtolower($_POST["username"])));
+            $res->bindValue(":x2", strip_tags(strtolower($_POST["nome"])));
+            $res->bindValue(":x3", strip_tags(strtolower($_POST["cognome"])));
             $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
             $res->bindValue(":x4", $password);
             $res->bindValue(":x5", $_POST["data"]);
-            $res->bindValue(":x6", strtolower($_POST["luogo"]));
+            $res->bindValue(":x6", strip_tags(strtolower($_POST["luogo"])));
             $res->execute();
 
             echo "Registrazione Completata! <br> Redirect in corso...";

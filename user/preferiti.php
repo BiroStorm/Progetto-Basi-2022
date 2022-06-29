@@ -49,6 +49,7 @@ $username = $_SESSION['username'];
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Giorno</th>
+                                <th scope="col">Conferenza</th>
                                 <th scope="col">Sessione</th>
                                 <th scope="col">Link Sessione</th>
                                 <th scope="col">Titolo</th>
@@ -65,8 +66,9 @@ $username = $_SESSION['username'];
                             <tr>
                                 <td scope="row"><?php echo $index?></td>
                                 <td scope="row"><?php echo $presentazione->Giorno?></td>
+                                <td scope="row"><a href="/conferenze/dettagli.php?Anno=<?php echo $presentazione->AnnoEdizione?>&Acronimo=<?php echo $presentazione->AcronimoConf?>" >Conferenza</a></td>
                                 <td scope="row"><?php echo $presentazione->TitoloSessione?></td>
-                                <td scope="row"><?php echo $presentazione->Link?></td>
+                                <td scope="row"><a href="<?php echo $presentazione->Link?>" >Link</a></td>
                                 <td scope="row"><a href="/utilities/redirectPresentazione.php?Codice=<?php echo $presentazione->CodPresentazione?>" ><?php echo $presentazione->TitoloPresentazione?></a></td>
                                 <td scope="row"><?php echo $presentazione->OraInizio?></td>
                                 <td scope="row"><?php echo $presentazione->OraFine?></td>

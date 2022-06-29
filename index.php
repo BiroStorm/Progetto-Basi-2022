@@ -40,9 +40,12 @@
 
     <!-- START MAIN BOX -->
 
-    <h1>Progetto di Basi di Dati</h1>
-    <div class="container">
-        <div class="row">
+    <h1 class="text-center m-3">Progetto di Basi di Dati</h1>
+    
+    <h3 class="text-center mt-3">Statistiche Sito Web</h3>
+
+    <div class="container border border-5">
+        <div class="row border-bottom border-2">
             <div class="col">
                 Conferenze Registrate
             </div>
@@ -64,6 +67,9 @@
                 <?php echo $NUtenti; ?>
             </div>
         </div>
+    </div>
+    <div class="container mt-4">
+        <h3 class="text-center">Lista Valutazione Speaker & Presenter</h3>
         <div class="row">
             <div class="col">
                 <table class="table table-striped">
