@@ -41,107 +41,8 @@ $username = $_SESSION['username'];
     $cognome = $row["Cognome"];
     $dataNascita = $row["DataNascita"];
     $luogoNascita = $row["LuogoNascita"];
-
-    $sql = 'SELECT * FROM Presenter WHERE Username = :usr1';
-    $res = $pdo->prepare($sql);
-    $res->bindValue(":usr1", $username);
-    $res->execute();
-    $row = $res->fetch();
-    $nomeUni = $row["NomeUni"];
-    $curriculum = $row["Curriculum"];
-    $foto = $row["Foto"];
-    
-
-   
-
-
-    try {
-        if (strcmp($_SESSION["role"], "Presenter") == 0) {
-            $sql = 'UPDATE Presenter SET NomeUni = :uninome WHERE Username = :usr1';
-            $res = $pdo->prepare($sql);
-            $res->bindValue(":usr1", $username);
-            $res->bindValue(":uninome", $_POST["nomeUni"]);
-            $res->execute();
-        } else if (strcmp($_SESSION["role"], "Speaker") == 0) {
-            $sql = 'UPDATE Speaker SET NomeUni = :uninome WHERE Username = :usr1';
-            $res = $pdo->prepare($sql);
-            $res->bindValue(":usr1", $username);
-            $res->bindValue(":uninome", $_POST["nomeUni"]);
-            $res->execute();
-        }
-    } catch (PDOException $e) {
-        echo ("[ERRORE] Call Modifica Conferenza non riuscita. Errore: " . $e->getMessage());
-        exit;
-    }
-
-    try {
-        if (strcmp($_SESSION["role"], "Presenter") == 0) {
-            $sql = 'UPDATE Presenter SET Curriculum = :curricola WHERE Username = :usr1';
-            $res = $pdo->prepare($sql);
-            $res->bindValue(":usr1", $username);
-            $res->bindValue(":curricola", $_POST["curriculum"]);
-            $res->execute();
-        } else if (strcmp($_SESSION["role"], "Speaker") == 0) {
-            $sql = 'UPDATE Speaker SET Curriculum = :curricola WHERE Username = :usr1';
-            $res = $pdo->prepare($sql);
-            $res->bindValue(":usr1", $username);
-            $res->bindValue(":curricola", $_POST["curriculum"]);
-            $res->execute();
-        }
-    } catch (PDOException $e) {
-        echo ("[ERRORE] Call Modifica Conferenza non riuscita. Errore: " . $e->getMessage());
-        exit;
-    }
-
-    try {
-        if (strcmp($_SESSION["role"], "Presenter") == 0) {
-            $logopath = "/assets/imgs/profili/default.png";
-            $sql = 'UPDATE Presenter SET Foto = :fotografia WHERE Username = :usr1';
-            $res = $pdo->prepare($sql);
-            $res->bindValue(":usr1", $username);
-            $res->bindValue(":fotografia", $logopath);
-            $res->execute();
-        } else if (strcmp($_SESSION["role"], "Speaker") == 0) {
-            $logopath = "/assets/imgs/profili/default.png";
-            $sql = 'UPDATE Speaker SET Foto = :fotografia WHERE Username = :usr1';
-            $res = $pdo->prepare($sql);
-            $res->bindValue(":usr1", $username);
-            $res->bindValue(":fotografia", $logopath);
-            $res->execute();
-        }
-    } catch (PDOException $e) {
-        echo ("[ERRORE] Call Modifica Conferenza non riuscita. Errore: " . $e->getMessage());
-        exit;
-    }
-    // SETUP LOADING LOGO
-    $target_dir = __DIR__ . "/../assets/imgs/profili/";
-    $targetfinale = $target_dir . basename($_FILES["fotoProfilo"]["name"]);
-
-    $imageFileType = strtolower(pathinfo($targetfinale, PATHINFO_EXTENSION));
-
-    if (UPLOAD_ERR_OK !== $_FILES["fotoProfilo"]['error']) {
-        //errore nell'upload
-    } else {
-        $check = getimagesize($_FILES["fotoProfilo"]["tmp_name"]);
-        if ($check == false || ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg")) {
-            // non è un img
-        } else {
-            if ($_FILES["fotoProfilo"]["size"] > 800000) {
-                // file troppo grande!
-                echo "file troppo grande!";
-                exit;
-            } else {
-                if (move_uploaded_file($_FILES["fotoProfilo"]["tmp_name"], $target_dir . $nome . $cognome . "." . $imageFileType)) {
-                    $logopath = "/assets/imgs/profili/" . $nome . $cognome . "." . $imageFileType;
-                } else {
-                    //errore con l'uploading del file
-                    echo "error";
-                }
-            }
-        }
-    }
     ?>
-    <div class="card">
+    <div class="card m-3">
         <div class="card-header">
             Informazioni Personali
         </div>
@@ -154,61 +55,92 @@ $username = $_SESSION['username'];
                 </div>
                 <div class="form-group">
                     <label>Nome</label>
-                    <input type="text" class="form-control" id="" value="<?php echo $nome ?>">
+                    <input type="text" class="form-control" id="" value="<?php echo $nome ?>" readonly>
                 </div>
                 <div class="form-group">
                     <label>Cognome</label>
-                    <input type="text" class="form-control" id="" value="<?php echo $cognome ?>">
+                    <input type="text" class="form-control" id="" value="<?php echo $cognome ?>" readonly>
                 </div>
                 <div class="form-group">
                     <label>Data di Nascita</label>
-                    <input type="date" class="form-control" id="" value="<?php echo $dataNascita ?>">
+                    <input type="date" class="form-control" id="" value="<?php echo $dataNascita ?>" readonly>
                 </div>
                 <div class="form-group">
                     <label>Luogo di Nascita</label>
-                    <input type="text" class="form-control" id="" value="<?php echo $luogoNascita ?>">
+                    <input type="text" class="form-control" id="" value="<?php echo $luogoNascita ?>" readonly>
                 </div>
-                <button type="submit" class="btn btn-primary">Aggiorna i dati</button>
             </form>
         </div>
     </div>
 
     <?php
 
+
     if ((strcmp($_SESSION["role"], "Speaker") == 0) || (strcmp($_SESSION["role"], "Presenter") == 0)) {
+
+        $sql = 'SELECT Curriculum, NomeUni, Dipartimento FROM ' . $_SESSION["role"] . ' WHERE Username = :usr1';
+        $res = $pdo->prepare($sql);
+        $res->bindValue(":usr1", $username);
+        $res->execute();
+        $row = $res->fetch();
+        $nomeUni = $row["NomeUni"];
+        $curriculum = $row["Curriculum"];
+        $dipartimento = $row["Dipartimento"];
     ?>
-        <div class="card">
+        <!-- SEZIONE MODIFICA DATI PRESENTER E SPEAKER -->
+
+        <div class="card m-3">
             <div class="card-header">
                 Dati Presenter e Speaker
             </div>
             <div class="card-body">
-                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" class="form-control" id="" placeholder="<?php echo $username ?>" readonly>
-                        <small id="" class="form-text text-muted">L'username non può essere modificato.</small>
-                        <div class="mb-3">
-                            <label class="form-label">Inserimento CV</label>
-                            <input type="file" name="curriculum" class="form-control form-control-sm" accept="application/pdf,application/vnd.ms-excel" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Aggiorna il CV</button>
-                </form>
-                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label class="form-label">Foto profilo</label>
-                        <input type="file" name="fotoProfilo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg" value="<?php echo $foto ?>" required>
+                <div class="card m-3">
+                    <div class="card-header">
+                        Curriculum Vitae
                     </div>
-                    <button type="submit" class="btn btn-primary">Aggiorna la foto profilo</button>
-                    </form>
-                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label class="form-label">Affiliazione universitaria</label>
-                            <input type="text" name="nomeUni" class="form-control" value="<?php echo $nomeUni ?>" required>
-                        </div>
+                    <div class="card-body">
+                        <form action="/api/aggiornaCurriculum.php" method="post">
+                            <div class="form-group">
+                                <div class="mb-3">
+                                    <input type="text" name="curriculum" class="form-control" maxlength="30" value="<?php echo $curriculum ?>" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Aggiorna il CV</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card m-3">
+                    <div class="card-header">
+                        Affiliazione Universitaria
+                    </div>
+                    <div class="card-body">
+                        <form action="/api/aggiornaAffiliazione.php" method="post">
+                            <div class="mb-3">
+                                <label class="form-label">Nome Università</label>
+                                <input type="text" name="nomeUni" class="form-control" value="<?php echo $nomeUni ?>" maxlength=50 required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nome Dipartimento</label>
+                                <input type="text" name="dipartimento" class="form-control" value="<?php echo $dipartimento ?>" maxlength=50 required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Aggiorna Affiliazione</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card m-3">
+                    <div class="card-header">
+                        Foto
+                    </div>
+                    <div class="card-body">
+                        <form action="/api/aggiornaFoto.php" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <input type="file" name="fotoProfilo" class="form-control" accept="image/png, image/jpeg, image/jpg" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Carica Foto</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Aggiorna l'affiliazione</button>
-            </form>
-        </div>
         </div>
     <?php
     }
