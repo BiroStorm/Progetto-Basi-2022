@@ -37,7 +37,8 @@ include_once "../utilities/mongoDBSetup.php";
 $mongodb->Users->insertOne(
     [
         "action" => "Iscrizione Conferenza",
-        "username" => strip_tags(strtolower($_POST["username"])),
+        "username" => $_SESSION["username"],
+        "conferenza" => $acronimo . " " . $anno,
         "data" => date("Y-m-d H:i:s", time())
     ]
 );

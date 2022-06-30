@@ -69,7 +69,7 @@ $periodo = new DatePeriod(
             <?php
             // se è loggato e lo svolgimento è attivo, mostrare pulsante o scritta d'iscrizione.
             // + se è admin tasto di "Modifica"
-            if (isset($_SESSION["authorized"])){
+            if (isset($_SESSION["authorized"]) && strcmp("Attiva", $row["Svolgimento"]) == 0){
                 //controlla se è già iscritto
                 $sql = "SELECT 1 FROM Registrazione WHERE UsernameUtente = ? AND AcronimoConf = ? AND AnnoEdizione = ?";
                 $res = $pdo->prepare($sql);

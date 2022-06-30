@@ -45,7 +45,6 @@ if (isset($_SESSION['authorized'])) {
                             ?>
                             <!-- tutti gli utenti -->
                             <li><a class="dropdown-item" id="" href="/user/preferiti.php">Visualizza Preferiti</a></li>
-                            <li><a class="dropdown-item" id="" href="#">Da aggiungere</a></li>
                             <li><a class="dropdown-item" href="/logout.php">Logout</a></li>
                         </ul>
 

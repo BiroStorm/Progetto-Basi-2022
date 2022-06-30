@@ -46,7 +46,7 @@ try {
     $mongodb->Presentazione->insertOne(
         [
             "action" => "New Risorsa",
-            "user" => $username,
+            "user" => $_SESSION["username"],
             "presentazione" => $_POST["Codice"],
             "link" => $_POST["Link"],
             "descrizione" => $_POST["Descrizione"],

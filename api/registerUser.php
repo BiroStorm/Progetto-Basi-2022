@@ -15,29 +15,29 @@ if (
             header('Location: /errorPage.php?error="Username già registrato!"');
             exit();
         } else {
-            // INSERIMENTO LOG IN MONGO
-            include_once "../utilities/mongoDBSetup.php";
-            $mongodb->Users->insertOne(
-                [
-                    "action" => "New User",
-                    "username" => strip_tags(strtolower($_POST["username"])),
-                    "data" => date("Y-m-d H:i:s", time())
-                ]
-            );
-            // END LOG IN MONGO;
-
+            $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
             $sql = 'CALL Registrazione(:x1, :x2, :x3, :x4, :x5, :x6)';
             $res = $pdo->prepare($sql);
             $res->bindValue(":x1", strip_tags(strtolower($_POST["username"])));
-            $res->bindValue(":x2", strip_tags(strtolower($_POST["nome"])));
-            $res->bindValue(":x3", strip_tags(strtolower($_POST["cognome"])));
-            $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
-            $res->bindValue(":x4", $password);
+            $res->bindValue(":x2", $password);
+            $res->bindValue(":x3", strip_tags(strtolower($_POST["nome"])));
+            $res->bindValue(":x4", strip_tags(strtolower($_POST["cognome"])));
             $res->bindValue(":x5", $_POST["data"]);
             $res->bindValue(":x6", strip_tags(strtolower($_POST["luogo"])));
             $res->execute();
 
             if ($res->rowCount() == 0) {
+
+                // INSERIMENTO LOG IN MONGO
+                include_once "../utilities/mongoDBSetup.php";
+                $mongodb->Users->insertOne(
+                    [
+                        "action" => "New User",
+                        "username" => strip_tags(strtolower($_POST["username"])),
+                        "data" => date("Y-m-d H:i:s", time())
+                    ]
+                );
+                // END LOG IN MONGO;
 
                 echo "Registrazione Completata! <br> Redirect in corso...";
                 header("Refresh: 1; URL=/login.php");
@@ -48,7 +48,7 @@ if (
             }
         }
     } catch (PDOException $e) {
-        echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
+        echo ("[ERRORE] Stored Procedure (Registrazione) non riuscita. Errore: " . $e->getMessage());
         exit();
     }
 };
