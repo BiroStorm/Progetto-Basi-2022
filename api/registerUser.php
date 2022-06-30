@@ -15,6 +15,16 @@ if (
             header('Location: /errorPage.php?error="Username già registrato!"');
             exit();
         } else {
+            // INSERIMENTO LOG IN MONGO
+            include_once "../utilities/mongoDBSetup.php";
+            $mongodb->Users->insertOne(
+                [
+                    "action" => "New User",
+                    "username" => strip_tags(strtolower($_POST["username"])),
+                    "data" => date("Y-m-d H:i:s",time())
+                ]
+            );
+            // END LOG IN MONGO;
 
             $sql = 'INSERT INTO Utente(Username, Nome, Cognome, Password, DataNascita, LuogoNascita) VALUES(:x1, :x2, :x3, :x4, :x5, :x6)';
             $res = $pdo->prepare($sql);
@@ -27,6 +37,8 @@ if (
             $res->bindValue(":x6", strip_tags(strtolower($_POST["luogo"])));
             $res->execute();
 
+            
+
             echo "Registrazione Completata! <br> Redirect in corso...";
             header("Refresh: 1; URL=/login.php");
         }
@@ -35,4 +47,3 @@ if (
         exit();
     }
 };
-?>

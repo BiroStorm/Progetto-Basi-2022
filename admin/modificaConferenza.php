@@ -67,7 +67,22 @@ if (isset($_POST["modificaTipo"])) {
                 $res->bindValue(2, $_POST["AnnoEdizione"]);
                 $res->bindValue(3, $_POST["NomeSponsor"]);
                 $res->bindValue(4, $_POST["ImportoSponsor"]);
+
                 $res->execute();
+
+                // INSERIMENTO LOG IN MONGO
+                include_once "../utilities/mongoDBSetup.php";
+                $mongodb->Conferenze->insertOne(
+                    [
+                        "action" => "Aggiunta Sponsor",
+                        "sponsor" => $_POST["NomeSponsor"],
+                        "importo" => $_POST["ImportoSponsor"],
+                        "conferenza" => $_POST["Acronimo"] . " " . $_POST["AnnoEdizione"],
+                        "data" => date("Y-m-d H:i:s", time())
+                    ]
+                );
+                // END LOG IN MONGO;
+                
                 /* header("Location: /conferenze/dettagli.php?Anno=" . $_POST["AnnoEdizione"] . "&Acronimo=" . $_POST["Acronimo"]);
                 exit; */
             } catch (PDOException $e) {
@@ -283,7 +298,7 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                                     // per poi fare la query successiva! */
                                     $allSession = $st2->fetchAll(PDO::FETCH_OBJ);
                                     $st2->closeCursor();
-                                    
+
                                     foreach ($allSession as $row4) {
                             ?>
 
@@ -292,7 +307,7 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                                                 <h5 class="card-title"><?php echo $row4->Titolo; ?></h5>
                                                 <h6 class="card-subtitle mb-2 text-muted"><?php echo $row4->Giorno; ?></h6>
                                                 <p class="card-text">Orario: <?php echo $row4->OraInizio . " - " . $row4->OraFine ?></p>
-                                                <p><a class="btn btn-outline-secondary" href="/admin/modificaSessione.php?Codice=<?php echo $row4->Codice?>" role="button">Modifica Sessione</a></p>
+                                                <p><a class="btn btn-outline-secondary" href="/admin/modificaSessione.php?Codice=<?php echo $row4->Codice ?>" role="button">Modifica Sessione</a></p>
                                                 <?php if (empty($row4->Link)) {
                                                     echo "<small>Nessun Link Presente</small>";
                                                 } else {
@@ -338,7 +353,7 @@ $row = $st->fetch(PDO::FETCH_OBJ);
                                     }
                                 }
                             } catch (PDOException $e) {
-                                echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
+                                echo ("[ERRORE] Stored Procedure (VisualizzazioneSessioni) non riuscita. Errore: " . $e->getMessage());
                                 exit();
                             };
                             ?>

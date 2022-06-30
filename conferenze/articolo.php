@@ -226,6 +226,52 @@ $st->closeCursor();
                 </form>
             </div>
 
+            <!-- VALUTAZIONE DI ALTRI ADMIN SU QUESTA PRESENTAZIONE -->
+            <div class="card m-4">
+                <div class="card-header">
+                    Valutazione della Presentazione
+                </div>
+                <div class="card-body">
+                    <?php
+                    $res->closeCursor();
+                    $sql = "SELECT * FROM Valutazione WHERE CodPresentazione = ?";
+                    try {
+                        $st = $pdo->prepare($sql);
+                        $st->bindValue(1, $_GET["Codice"], PDO::PARAM_INT);
+                        $st->execute();
+                    } catch (PDOException $e) {
+                        echo ("[ERRORE] Query SQL (get Valutazione) non riuscita. Errore: " . $e->getMessage());
+                        exit;
+                    }
+                    // SCORRERE IL RESULT E STAMPARE LA TABELLA!
+                    if ($st->rowCount() == 0) {
+                    ?>
+                        <p>Non ci sono valutazioni per questa Presentazione!</p>
+                    <?php
+                    } else {
+                        echo '<div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col">Voto</th>
+                            <th scope="col">Note</th>
+                          </tr>
+                        </thead>
+                        <tbody>';
+                        while ($valutazione = $st->fetch(PDO::FETCH_OBJ)) {
+                            echo "<tr>
+                        <th scope='row'>$valutazione->UsernameAdmin</th>
+                        <td>$valutazione->Voto</td>
+                        <td>$valutazione->Note</td>
+                      </tr>";
+                        }
+                        echo '</tbody>
+                    </table></div>';
+                    }
+                    ?>
+                </div>
+            </div>
             <!-- Valutazione della Presentazione -->
             <div class="card m-4">
                 <div class="card-header">
@@ -233,6 +279,7 @@ $st->closeCursor();
                 </div>
                 <div class="card-body">
                     <?php
+                    $res->closeCursor();
                     $sql = "SELECT 1 FROM Valutazione WHERE UsernameAdmin = ? AND CodPresentazione = ?";
                     try {
                         $st = $pdo->prepare($sql);

@@ -174,6 +174,7 @@ $st->closeCursor();
             </div>
             <div class="card-body">
                 <?php
+                $st->closeCursor();
                 $sql = "SELECT * FROM Valutazione WHERE CodPresentazione = ?";
                 try {
                     $st = $pdo->prepare($sql);

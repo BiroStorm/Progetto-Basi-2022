@@ -45,6 +45,21 @@ try {
     $st->execute();
 
     if ($st->rowCount() == 0) {
+        // INSERIMENTO LOG IN MONGO
+        include_once "../../utilities/mongoDBSetup.php";
+        $mongodb->Conferenze->insertOne(
+            [
+                "action" => "Nuovo Tutorial",
+                "user" => $_SESSION["username"],
+                "titolo" => $_POST["Titolo"],
+                "sessione" => $_POST["CodSessione"],
+                "inizio" => $_POST["Inizio"],
+                "fine" => $_POST["Fine"],
+                "abstract" => $_POST["Abstract"],
+                "data" => date("Y-m-d H:i:s", time())
+            ]
+        );
+
         header('Location: /admin/modificaSessione.php?Codice=' . $_POST["CodSessione"]);
         exit;
     }

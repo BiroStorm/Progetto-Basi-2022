@@ -67,7 +67,24 @@ try {
     $st->bindParam(7, $_POST["Link"]);
     $st->execute();
 
+
     if ($st->rowCount() == 0) {
+        // INSERIMENTO LOG IN MONGO
+        include_once "../../utilities/mongoDBSetup.php";
+        $mongodb->Conferenze->insertOne(
+            [
+                "action" => "Nuova Sessione",
+                "user" => $_SESSION["username"],
+                "titolo" => $_POST["Titolo"],
+                "dataSessione" => $_POST["Data"],
+                "inizio" => $_POST["Inizio"],
+                "fine" => $_POST["Fine"],
+                "conferenza" => $_POST["Acronimo"] . " " .$_POST["AnnoEdizione"],
+                "data" => date("Y-m-d H:i:s", time())
+            ]
+        );
+        // END LOG IN MONGO;
+
         header('Location: /admin/modificaConferenza.php?Anno=' . $_POST["AnnoEdizione"] . '&Acronimo=' . $_POST["Acronimo"]);
         exit;
     }

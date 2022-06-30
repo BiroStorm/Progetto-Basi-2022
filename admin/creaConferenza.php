@@ -13,86 +13,6 @@ if (isset($_SESSION['authorized'])) {
     header("Location: /login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
     exit();
 }
-$uploadOk = 1;
-if (
-    isset($_POST['acronimo']) && isset($_POST["annoEdizione"]) && isset($_POST["nome"])
-    && isset($_POST["inizio"]) && isset($_POST["fine"]) && isset($_FILES["logo"])
-) {
-    // controllo date inizio < fine:
-    if ($_POST["inizio"] > $_POST["fine"]) {
-        // errore
-        // TODO:
-        $uploadOk = 0;
-    }
-
-
-    include '../utilities/databaseSetup.php';
-    try {
-        // Controlliamo che l'Acronimo scelto sia Univoco:
-        $sql = 'SELECT 1 FROM Conferenza WHERE Acronimo=? AND AnnoEdizione = ?';
-        $res = $pdo->prepare($sql);
-        $res->bindValue(1, $_POST["acronimo"]);
-        $res->bindValue(2, $_POST["annoEdizione"]);
-        $res->execute();
-        if ($res->rowCount() == 1) {
-            // Acronimo Già Presente!
-            // TODO 
-            $uploadOk = 0;
-        } else {
-
-            $sql = 'CALL NuovaConferenza(?, ?, ?, ?, ?, ?, ?)';
-            $res = $pdo->prepare($sql);
-
-            $logopath = "/assets/imgs/conferenza/default.png";
-            $res->bindValue(1, $_SESSION["username"]);
-            $res->bindValue(2, $_POST["acronimo"]);
-            $res->bindValue(3, $_POST["annoEdizione"]);
-            $res->bindParam(4, $logopath);
-            $res->bindValue(5, $_POST["nome"]);
-            $res->bindValue(6, $_POST["inizio"]);
-            $res->bindValue(7, $_POST["fine"]);
-
-            // SETUP LOADING LOGO
-            $target_dir = __DIR__ . "/../assets/imgs/conferenza/";
-            $targetfinale = $target_dir . basename($_FILES["logo"]["name"]);
-
-            $imageFileType = strtolower(pathinfo($targetfinale, PATHINFO_EXTENSION));
-
-            if (UPLOAD_ERR_OK !== $_FILES["logo"]['error']) {
-                header('Location: /errorPage.php?error="Errore durante il caricamento."');
-                exit;
-            }
-            $check = getimagesize($_FILES["logo"]["tmp_name"]);
-            if ($check == false || ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg")) {
-
-                header('Location: /errorPage.php?error="Non è un immagine"');
-                exit;
-            }
-            if ($_FILES["logo"]["size"] > 800000) {
-                // file troppo grande!
-                echo "file troppo grande!";
-                exit;
-            } else {
-                if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_dir . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType)) {
-                    $logopath = "/assets/imgs/conferenza/" . $_POST["acronimo"] . $_POST["annoEdizione"] . "." . $imageFileType;
-                } else {
-                    //errore con l'uploading del file
-                    echo "error";
-                }
-            }
-
-            if ($res->execute()) {
-                echo "Creazione conferenza Completata! <br> Redirect in corso...";
-                header("Refresh: 0.7; URL=/conferenze.php");
-            } else {
-                // esecuzione fallita...
-            }
-        }
-    } catch (PDOException $e) {
-        echo ("[ERRORE] Query SQL (Select) non riuscita. Errore: " . $e->getMessage());
-        exit();
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -117,7 +37,7 @@ if (
             Crea una Conferenza
         </div>
         <div class="card-body">
-            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+            <form action="/api/admin/aggiungiConferenza.php" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label">Acronimo</label>
                     <input type="text" name="acronimo" class="form-control" required>
@@ -146,12 +66,6 @@ if (
             </form>
         </div>
     </div>
-    <?php
-    if ($uploadOk == 0) {
-        //stampa qualcosa//
-    }
-    ?>
-    <br>
 </body>
 
 </html>

@@ -24,6 +24,20 @@ try {
     $res->bindValue(3, $time);
     $res->bindValue(4, $message, PDO::PARAM_STR);
     $res->execute();
+
+     // INSERIMENTO LOG IN MONGO
+     include_once "../utilities/mongoDBSetup.php";
+     $mongodb->Chat->insertOne(
+         [
+             "action" => "New Messaggio",
+             "user" => $username,
+             "sessione" => $sessione,
+             "messaggio" => $message,
+             "data" => date("Y-m-d H:i:s",time())
+         ]
+     );
+     // END LOG IN MONGO;
+
 } catch (PDOException $e) {
     echo ("[ERRORE] InserisciMessaggio non riuscita. Errore: " . $e->getMessage());
     header('HTTP/1.1 500');

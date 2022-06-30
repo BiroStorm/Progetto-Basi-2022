@@ -41,6 +41,19 @@ try {
     $st->bindValue(3, $_POST["voto"]);
     $st->bindValue(4, $_POST["note"]);
     $st->execute();
+    // INSERIMENTO LOG IN MONGO
+    include_once "../../utilities/mongoDBSetup.php";
+    $mongodb->Presentazione->insertOne(
+        [
+            "action" => "New Valutazione",
+            "user" => $_SESSION["username"],
+            "presentazione" => $_POST["Codice"],
+            "voto" => $_POST["voto"],
+            "note" =>$_POST["note"],
+            "data" => date("Y-m-d H:i:s",time())
+        ]
+    );
+    // END LOG IN MONGO;
 } catch (PDOException $e) {
     echo ("[ERRORE] Stored Procedure (AggiungiValutazione) non riuscita. Errore: " . $e->getMessage());
     exit;

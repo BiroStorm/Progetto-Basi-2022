@@ -79,4 +79,5 @@ if (isset($_SESSION['authorized'])) {
 # admin : admin
 # Utente1 : Utente!1 
 # Speaker1 : @Speaker1
+# maria : HardPassword!2
 ?>

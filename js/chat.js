@@ -47,19 +47,23 @@ function sendNewMessage(text) {
 }
 
 var offset = 0;
-
 function loadFirstTime() {
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/getChatMsg.php", true);
     xhr.onload = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
+            console.log(xhr.status)
+            if (xhr.status === 204) {
+                viewMessageBox.innerHTML = "";
+            } else if (xhr.status === 200) {
                 let response = JSON.parse(xhr.response);
                 let data = response[1];
                 offset = response[0];
                 viewMessageBox.innerHTML = data;
                 viewMessageBox.scrollTop = viewMessageBox.scrollHeight;
-
+            } else if (xhr.status === 405) {
+                // Chat Chiusa!
+                location.reload();
             }
         }
     }

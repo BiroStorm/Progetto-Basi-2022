@@ -58,11 +58,11 @@ if ($imageFileType != "pdf") {
     header('Location: /errorPage.php?error="Non è un file PDF!"');
     exit;
 } else {
-    if (move_uploaded_file($_FILES["filePDF"]["tmp_name"], $target_dir . pathinfo($_FILES["filePDF"]["name"], PATHINFO_FILENAME)."Sess". $_POST["CodSessione"]  .".". $imageFileType)) {
-        $filepath = "/assets/pdf/articolo/" . pathinfo($_FILES["filePDF"]["name"], PATHINFO_FILENAME)."Sess". $_POST["CodSessione"]  .".". $imageFileType;
+    if (move_uploaded_file($_FILES["filePDF"]["tmp_name"], $target_dir . pathinfo($_FILES["filePDF"]["name"], PATHINFO_FILENAME) . "Sess" . $_POST["CodSessione"]  . "." . $imageFileType)) {
+        $filepath = "/assets/pdf/articolo/" . pathinfo($_FILES["filePDF"]["name"], PATHINFO_FILENAME) . "Sess" . $_POST["CodSessione"]  . "." . $imageFileType;
     } else {
         //errore con l'uploading del file
-        header('Location: /errorPage.php?error="'. htmlspecialchars($_FILES["filePDF"]["error"]) . '"');
+        header('Location: /errorPage.php?error="' . htmlspecialchars($_FILES["filePDF"]["error"]) . '"');
         exit;
     }
 }
@@ -78,7 +78,19 @@ try {
     $st->bindParam(5, $filepath);
     $st->bindParam(6, $_POST["NPagine"]);
     $st->execute();
-
+    // INSERIMENTO LOG IN MONGO
+    include_once "../../utilities/mongoDBSetup.php";
+    $mongodb->Conferenze->insertOne(
+        [
+            "action" => "Nuovo Articolo",
+            "user" => $_SESSION["username"],
+            "titolo" => $_POST["Titolo"],
+            "sessione" => $_POST["CodSessione"],
+            "inizio" => $_POST["Inizio"],
+            "fine" => $_POST["Fine"],
+            "data" => date("Y-m-d H:i:s", time())
+        ]
+    );
     $result = $st->fetch();
     $st->closeCursor();
 } catch (PDOException $e) {
@@ -120,8 +132,8 @@ $paroleChiave = explode(",", $_POST["paroleChiave"]);
 foreach ($paroleChiave as $parola) {
     try {
         $st = $pdo->prepare($sqlParole);
-        $st->bindValue(1, 14, PDO::PARAM_INT);
-        $st->bindValue(2, trim($parola));
+        $st->bindValue(1, $codiceArticolo, PDO::PARAM_INT);
+        $st->bindValue(2, trim($parola), PDO::PARAM_STR);
         $st->execute();
         $st->closeCursor();
     } catch (PDOException $e) {

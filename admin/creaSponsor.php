@@ -13,70 +13,6 @@ if (isset($_SESSION['authorized'])) {
     exit();
 }
 
-// if $_POST is set:
-if (isset($_POST["nome"]) && isset($_FILES["logo"])) {
-
-    $target_dir = __DIR__ . "/../assets/imgs/sponsor/";
-    $targetfinale = $target_dir . basename($_FILES["logo"]["name"]);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($targetfinale, PATHINFO_EXTENSION));
-
-    if (UPLOAD_ERR_OK !== $_FILES["logo"]['error']) {
-        //errore nell'upload
-        header('Location: /errorPage.php?error="Errore durante l\'upload!"' . $_FILES["logo"]['error']);
-        exit;
-    }
-
-    include '../utilities/databaseSetup.php';
-
-    // controlliamo se esiste già lo sponsor
-    $sql = 'SELECT 1 FROM Sponsor WHERE Nome=?';
-    $res = $pdo->prepare($sql);
-    $res->bindValue(1, $_POST["nome"]);
-    $res->execute();
-    if ($res->rowCount() == 1) {
-        // Nome Sponsor Già Presente!
-        header('Location: /errorPage.php?error="Sponsor già presente!"');
-        exit;
-    }
-    
-    $logopath = "/assets/imgs/sponsor/default.jpg";
-
-    // UPLOAD FILE
-    $check = getimagesize($_FILES["logo"]["tmp_name"]);
-    if ($check == false || ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg")) {
-        // non è un img
-        $uploadOk = 0;
-    } else {
-        if ($_FILES["logo"]["size"] > 400000) {
-            // file troppo grande!
-        } else {
-            if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_dir . $_POST["nome"] . "." . $imageFileType)) {
-                $logopath = "/assets/imgs/sponsor/" . $_POST["nome"] . "." . $imageFileType;
-            } else {
-                //errore con l'uploading del file
-                header('Location: /errorPage.php?error="Errore durante il salvataggio del file!"');
-                exit;
-            }
-        }
-    }
-
-    if ($uploadOk == 1) {
-        $sql = 'CALL NuovoSponsor(?, ?)';
-        $res = $pdo->prepare($sql);
-        $res->bindValue(1, $_POST["nome"]);
-        $res->bindValue(2, $logopath);
-        if($res->execute()){
-            echo "Sponsor Creato con successo!<br>Redirecting...";
-            header("Refresh: 0.7; URL=/conferenze.php");
-            exit;
-        }else{
-            header('Location: /errorPage.php?error="Errore Inserimento nel DB."');
-            exit;
-        }
-    }
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -100,7 +36,7 @@ if (isset($_POST["nome"]) && isset($_FILES["logo"])) {
         <div class="card-header">
             Crea uno Sponsor
         </div>
-        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+        <form action="/api/admin/aggiungiSponsor.php" method="post" enctype="multipart/form-data">
 
             <div class="card-body">
                 <div class="mb-3">
