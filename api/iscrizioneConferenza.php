@@ -17,7 +17,6 @@ $acronimo = $_GET["Acronimo"];
 $username = $_SESSION["username"];
 
 include '../utilities/databaseSetup.php';
-//...
 
 $sql = 'CALL IscrizioneConferenza(:us, :ac, :an)';
 $res = $pdo->prepare($sql);
@@ -32,6 +31,17 @@ if ($res->rowCount() > 0){
     header("Refresh: 2; URL=/conferenze/dettagli.php?Anno=$anno&Acronimo=$acronimo");
     exit;
 }
+
+// INSERIMENTO LOG IN MONGO
+include_once "../utilities/mongoDBSetup.php";
+$mongodb->Users->insertOne(
+    [
+        "action" => "Iscrizione Conferenza",
+        "username" => strip_tags(strtolower($_POST["username"])),
+        "data" => date("Y-m-d H:i:s", time())
+    ]
+);
+// END LOG IN MONGO;
 
 echo "Registrato correttamente!<br>Sarai rendeirizzato automaticamente alla pagina della conferenza";
 header("Refresh: 2; URL=/conferenze/dettagli.php?Anno=$anno&Acronimo=$acronimo");

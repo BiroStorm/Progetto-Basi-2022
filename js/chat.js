@@ -52,7 +52,6 @@ function loadFirstTime() {
     xhr.open("POST", "/api/getChatMsg.php", true);
     xhr.onload = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {
-            console.log(xhr.status)
             if (xhr.status === 204) {
                 viewMessageBox.innerHTML = "";
             } else if (xhr.status === 200) {
